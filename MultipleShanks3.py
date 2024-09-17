@@ -279,7 +279,8 @@ class MultipleShanks:
         - It calculates whether these points are on the boundary of the mesh, above or below the tool's cutting plane,
         and their perpendicular distance to the shank axis to assess collision risks.
         """
-        
+        #TODO Add behaviour for when point in the shank goes further than the bottom
+        #TODO in this scenario the shank is non colliding.
         collision_index = -2*np.ones(len(list_of_points)).astype(int) # set the indicies to undetermined by default
         list_of_points = np.array(list_of_points) # convert into numpy array
 
@@ -317,6 +318,14 @@ class MultipleShanks:
         # hence we can check if it is in the cutting edge by measuring the distace with a threshold
         distances_to_bottoms = np.linalg.norm(footpoints - self.bottoms[working_indices], axis = 1)- self.R
         collision_index[np.logical_and(collision_index == -2, np.isclose(distances_to_bottoms, np.zeros(len(distances_to_bottoms)), atol=5e-4))] = -1
+
+        # it could happen that you are moving further away from the bottom. Hence, the point is non colliding
+        # we are gonna check this by measuring the distance to the top.
+        # That is going to be measured as the distance from the point to the top plus the safe distance
+        # since that is what would give the next point for computation
+        distance_to_tops = np.linalg.norm(list_of_points - self.tops[working_indices], axis = 1) +  safe_distances
+        distance_compared_to_top = distance_to_tops - self.L # measures the excess in case that there is some
+        collision_index[np.logical_and(collision_index == -2, distance_compared_to_top > 0)] = -1
 
         collision_index[collision_index == -2] = 1
         return (collision_index, list_of_points, footpoints, safe_distances)
