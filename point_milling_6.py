@@ -827,11 +827,11 @@ class Envelope:
         """
 
         if type(t) == float:
-            return np.cross(self.tangent(t), self.surface.normal(np.array([self.u_of_t(t), self.v_of_t(t)])))
+            return np.cross(self.surface.normal(np.array([self.u_of_t(t), self.v_of_t(t)])), self.tangent(t))
         elif type(t) == np.ndarray and t.ndim == 1:
             #! the surface accepts 
             UV = np.array([self.u_of_t(t), self.v_of_t(t)]).T
-            return np.cross(self.tangent(t), self.surface.normal(UV))
+            return np.cross(self.surface.normal(UV), self.tangent(t))
         else:
             return print('Bad input t')
             
@@ -952,7 +952,7 @@ class Envelope:
             tangent, normal = self.tangent(t), self.surface.normal(np.array([self.u_of_t(t), self.v_of_t(t)]))
             # print('nrma tangente = ',np.linalg.norm(tangent))
             # print('nrma normal = ',np.linalg.norm(normal))
-            binormal  = np.cross(tangent, normal)
+            binormal  = np.cross(normal, tangent)
             D = sinF*binormal + cosF*tangent
             Rho = sinT*normal + cosT*(-sinF*tangent + cosF*binormal)
             center = self.curve(t)
@@ -970,7 +970,7 @@ class Envelope:
             tangent, normal = self.tangent(t), self.surface.normal(np.array([self.u_of_t(t), self.v_of_t(t)]).T)
             # print('norma tangente = ',  np.linalg.norm(tangent, axis = 1))
             # print('norma normal = ',  np.linalg.norm(normal, axis = 1))
-            binormal  = np.cross(tangent, normal)
+            binormal  = np.cross(normal, tangent)
             D = sinF[:, np.newaxis]*binormal + cosF[:, np.newaxis]*tangent
             Rho = sinT[:, np.newaxis]*normal + cosT[:, np.newaxis]*(-sinF[:, np.newaxis]*tangent + cosF[:, np.newaxis]*binormal)
             center = self.curve(t).T 
@@ -990,7 +990,7 @@ class Envelope:
             cosS,sinS = np.cos(s), np.sin(s)
 
             tangent, normal = self.tangent(t), self.surface.normal(np.array([self.u_of_t(t), self.v_of_t(t)]).T)
-            binormal  = np.cross(tangent, normal)
+            binormal  = np.cross(normal, tangent)
             D = sinF[:, np.newaxis]*binormal + cosF[:, np.newaxis]*tangent
             Rho = sinT[:, np.newaxis]*normal + cosT[:, np.newaxis]*(-sinF[:, np.newaxis]*tangent + cosF[:, np.newaxis]*binormal)
             center = self.curve(t).T 
