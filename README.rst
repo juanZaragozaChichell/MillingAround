@@ -2,10 +2,12 @@ MillingAround
 =============
 
 Python utilities for studying tool/workpiece interactions in point milling. The
-codebase collects the collision-detection routines from the SPM2024 paper
-(cylinders versus triangle meshes) and the tooling used to model toroidal/flat-
-end cutters moving over bicubic Bézier patches. Jupyter notebooks and
-precomputed media illustrate the workflows.
+codebase collects the collision-detection routines from the paper *Collision-
+free Tool Motion Planning for 5-Axis CNC Machining with Toroidal Cutters*
+(https://www.sciencedirect.com/science/article/abs/pii/S0010448524000526?via%3Dihub, https://bird.bcamath.org/handle/20.500.11824/1842)
+covering cylinders versus triangle meshes, and the tooling used to model
+toroidal/flat-end cutters moving over bicubic Bézier patches. Jupyter notebooks
+and precomputed media illustrate the workflows.
 
 Repository Layout
 -----------------
@@ -26,10 +28,16 @@ Repository Layout
    generation.
 * ``video_stuff/`` – generated media (STLs, PNGs, MP4) used in the demos.
 
-Animation preview
------------------
+Animation
+---------
 
-.. image:: video_stuff/collision_detection.gif
+Animation of the collision-detection algorithm. A translucent cylinder moves
+over the metal surface: starting at the top of the medial axis, the first
+footpoint is computed (cyan) and the first safe ball is constructed (green);
+the process then iterates from the boundary of the safe ball. It stops when a
+footpoint lies below the cutting plane (black circle), finalizing that cylinder.
+
+.. image:: ../../video_stuff/collision_detection.gif
    :alt: Collision detection animation
 
 Documentation
