@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>MeshGenerator &#8212; MillingAround 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=c058f7c8" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="point_milling_backend" href="point_milling_backend.html" />
+    <link rel="prev" title="CylinderCollisionDetection" href="cylinder_collision_detection.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-MeshGenerator">
+<span id="meshgenerator"></span><h1>MeshGenerator<a class="headerlink" href="#module-MeshGenerator" title="Link to this heading">¶</a></h1>
+<p>Utility geometries for machining workflows.</p>
+<p>This module provides small mesh-generation helpers (cylinders, cones, tori,
+ruled surfaces, heatmaps, etc.) built on top of <code class="xref py py-mod docutils literal notranslate"><span class="pre">trimesh</span></code>.  They are used
+throughout the point-milling notebooks to export STL assets, create Plotly
+visualizations, and reformat backend data for downstream processing.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="MeshGenerator.Arrow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MeshGenerator.</span></span><span class="sig-name descname"><span class="pre">Arrow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Arrow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Arrow" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Composite arrow mesh built from a cylinder shaft and cone tip.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Arrow.mesh">
+<span class="sig-name descname"><span class="pre">mesh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Arrow.mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Arrow.mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Build the <code class="xref py py-class docutils literal notranslate"><span class="pre">trimesh.Trimesh</span></code> arrow by concatenating primitives.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The assembled arrow mesh.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>trimesh.Trimesh</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Arrow.mesh_data">
+<span class="sig-name descname"><span class="pre">mesh_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Arrow.mesh_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Arrow.mesh_data" title="Link to this definition">¶</a></dt>
+<dd><p>Return the vertices and faces composing the arrow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Vertex and face arrays.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Arrow.export_mesh">
+<span class="sig-name descname"><span class="pre">export_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Arrow.export_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Arrow.export_mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Export the arrow mesh to <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em> or </em><em>path-like</em>) – Output file path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MeshGenerator.Cone">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MeshGenerator.</span></span><span class="sig-name descname"><span class="pre">Cone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Cone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Cone" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Triangulated cone defined by base center, apex, and radius.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Cone.pointcloud">
+<span class="sig-name descname"><span class="pre">pointcloud</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Cone.pointcloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Cone.pointcloud" title="Link to this definition">¶</a></dt>
+<dd><p>Sample circular layers along the cone axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of shape <code class="docutils literal notranslate"><span class="pre">(layers,</span> <span class="pre">samples,</span> <span class="pre">3)</span></code> storing each ring of points.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Cone.mesh_data">
+<span class="sig-name descname"><span class="pre">mesh_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Cone.mesh_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Cone.mesh_data" title="Link to this definition">¶</a></dt>
+<dd><p>Return vertices and triangular faces describing the cone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Flattened vertices and corresponding face indices.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Cone.mesh">
+<span class="sig-name descname"><span class="pre">mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Cone.mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Cone.mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Build a <code class="xref py py-class docutils literal notranslate"><span class="pre">trimesh.Trimesh</span></code> of the cone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>caps</strong> (<em>bool</em><em>, </em><em>optional</em>) – When <code class="docutils literal notranslate"><span class="pre">True</span></code> the base disk is added to close the shape.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Triangulated cone, optionally capped.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>trimesh.Trimesh</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Cone.export_mesh">
+<span class="sig-name descname"><span class="pre">export_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Cone.export_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Cone.export_mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Export the cone mesh to <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em> or </em><em>path-like</em>) – Output file path.</p></li>
+<li><p><strong>caps</strong> (<em>bool</em><em>, </em><em>optional</em>) – Mirrors <a class="reference internal" href="#MeshGenerator.Cone.mesh" title="MeshGenerator.Cone.mesh"><code class="xref py py-meth docutils literal notranslate"><span class="pre">mesh()</span></code></a> <code class="docutils literal notranslate"><span class="pre">caps</span></code> argument.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MeshGenerator.Sphere">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MeshGenerator.</span></span><span class="sig-name descname"><span class="pre">Sphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">center</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Sphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Sphere" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Thin wrapper around <code class="xref py py-class docutils literal notranslate"><span class="pre">trimesh.primitives.Sphere</span></code>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Sphere.export_mesh">
+<span class="sig-name descname"><span class="pre">export_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Sphere.export_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Sphere.export_mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Export the primitive to <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em> or </em><em>path-like</em>) – Destination file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MeshGenerator.ControlNet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MeshGenerator.</span></span><span class="sig-name descname"><span class="pre">ControlNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#ControlNet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.ControlNet" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Utility to visualize Bezier control nets via spheres and cylinders.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.ControlNet.control_points_fun">
+<span class="sig-name descname"><span class="pre">control_points_fun</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#ControlNet.control_points_fun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.ControlNet.control_points_fun" title="Link to this definition">¶</a></dt>
+<dd><p>Return the flattened control net as <code class="docutils literal notranslate"><span class="pre">(nrows*ncols,</span> <span class="pre">3)</span></code> array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Cartesian coordinates of each control point.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.ControlNet.spheres_mesh">
+<span class="sig-name descname"><span class="pre">spheres_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#ControlNet.spheres_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.ControlNet.spheres_mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Concatenate <a class="reference internal" href="#MeshGenerator.Sphere" title="MeshGenerator.Sphere"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sphere</span></code></a> primitives centered at control points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>R</strong> (<em>float</em>) – Sphere radius.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Combined mesh of control-point spheres.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>trimesh.Trimesh</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.ControlNet.edges">
+<span class="sig-name descname"><span class="pre">edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#ControlNet.edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.ControlNet.edges" title="Link to this definition">¶</a></dt>
+<dd><p>Create edge cylinders connecting adjacent control points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>R</strong> (<em>float</em>) – Cylinder radius for each edge.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mesh containing all edge cylinders.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>trimesh.Trimesh</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.ControlNet.export_mesh_separately">
+<span class="sig-name descname"><span class="pre">export_mesh_separately</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spheres_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges_radius</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#ControlNet.export_mesh_separately"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.ControlNet.export_mesh_separately" title="Link to this definition">¶</a></dt>
+<dd><p>Export spheres and edges meshes independently.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>names</strong> (<em>Sequence</em><em>[</em><em>str</em><em>]</em>) – Output file paths <code class="docutils literal notranslate"><span class="pre">[spheres_path,</span> <span class="pre">edges_path]</span></code>.</p></li>
+<li><p><strong>spheres_radius</strong> (<em>float</em>) – Radius passed to <a class="reference internal" href="#MeshGenerator.ControlNet.spheres_mesh" title="MeshGenerator.ControlNet.spheres_mesh"><code class="xref py py-meth docutils literal notranslate"><span class="pre">spheres_mesh()</span></code></a>.</p></li>
+<li><p><strong>edges_radius</strong> (<em>float</em>) – Radius passed to <a class="reference internal" href="#MeshGenerator.ControlNet.edges" title="MeshGenerator.ControlNet.edges"><code class="xref py py-meth docutils literal notranslate"><span class="pre">edges()</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.ControlNet.export_mesh">
+<span class="sig-name descname"><span class="pre">export_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spheres_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges_radius</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#ControlNet.export_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.ControlNet.export_mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Export combined control net to <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em> or </em><em>path-like</em>) – Output path for the merged mesh.</p></li>
+<li><p><strong>spheres_radius</strong> (<em>float</em>) – Radius used for spheres.</p></li>
+<li><p><strong>edges_radius</strong> (<em>float</em>) – Radius used for cylinders.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MeshGenerator.Surface">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MeshGenerator.</span></span><span class="sig-name descname"><span class="pre">Surface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Surface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Surface" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Convenience wrapper that exposes <a class="reference internal" href="point_milling_backend.html#point_milling_backend.Surface" title="point_milling_backend.Surface"><code class="xref py py-class docutils literal notranslate"><span class="pre">point_milling_backend.Surface</span></code></a>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Surface.generate_mesh_data">
+<span class="sig-name descname"><span class="pre">generate_mesh_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Surface.generate_mesh_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Surface.generate_mesh_data" title="Link to this definition">¶</a></dt>
+<dd><p>Return vertices, faces and normals from the backend surface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Raw data produced by <a class="reference internal" href="point_milling_backend.html#module-point_milling_backend" title="point_milling_backend"><code class="xref py py-mod docutils literal notranslate"><span class="pre">point_milling_backend</span></code></a>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[list[np.ndarray], matplotlib.tri.Triangulation, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Surface.export_mesh">
+<span class="sig-name descname"><span class="pre">export_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Surface.export_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Surface.export_mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Export the baked surface mesh to <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em> or </em><em>path-like</em>) – Destination path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MeshGenerator.Disk">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MeshGenerator.</span></span><span class="sig-name descname"><span class="pre">Disk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">center</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal_vector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Disk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Disk" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Planar disk triangulation defined by center, normal, and radius.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Disk.pointcloud">
+<span class="sig-name descname"><span class="pre">pointcloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Disk.pointcloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Disk.pointcloud" title="Link to this definition">¶</a></dt>
+<dd><p>Return circle samples plus center vertex.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>num_points</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of samples along the circumference.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array of sampled points ordered around the perimeter plus center.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Disk.mesh_data">
+<span class="sig-name descname"><span class="pre">mesh_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Disk.mesh_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Disk.mesh_data" title="Link to this definition">¶</a></dt>
+<dd><p>Generate vertices and fan faces for the disk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Vertex array and triangle fan indices.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[np.ndarray, list[list[int]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Disk.export_mesh">
+<span class="sig-name descname"><span class="pre">export_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Disk.export_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Disk.export_mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Export the disk mesh to <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em> or </em><em>path-like</em>) – Output file path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MeshGenerator.PipeSurface">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MeshGenerator.</span></span><span class="sig-name descname"><span class="pre">PipeSurface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curve</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#PipeSurface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.PipeSurface" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Generate tubular meshes around parametric curves.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.PipeSurface.tangent_vector">
+<span class="sig-name descname"><span class="pre">tangent_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#PipeSurface.tangent_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.PipeSurface.tangent_vector" title="Link to this definition">¶</a></dt>
+<dd><p>Approximate curve tangent at parameter <code class="docutils literal notranslate"><span class="pre">t</span></code> using finite differences.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>float</em>) – Parameter value.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tangent vector normalized to unit length.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.PipeSurface.orthonormal_frame">
+<span class="sig-name descname"><span class="pre">orthonormal_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#PipeSurface.orthonormal_frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.PipeSurface.orthonormal_frame" title="Link to this definition">¶</a></dt>
+<dd><p>Return Frenet-like frame <code class="docutils literal notranslate"><span class="pre">(T,</span> <span class="pre">N,</span> <span class="pre">B)</span></code> at <code class="docutils literal notranslate"><span class="pre">t</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>float</em>) – Parameter value inside <code class="docutils literal notranslate"><span class="pre">Range</span></code>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">3)</span></code> whose rows correspond to <code class="docutils literal notranslate"><span class="pre">T</span></code>, <code class="docutils literal notranslate"><span class="pre">N</span></code>, <code class="docutils literal notranslate"><span class="pre">B</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.PipeSurface.circle">
+<span class="sig-name descname"><span class="pre">circle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#PipeSurface.circle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.PipeSurface.circle" title="Link to this definition">¶</a></dt>
+<dd><p>Return a circle of radius <code class="docutils literal notranslate"><span class="pre">R</span></code> orthogonal to the curve at <code class="docutils literal notranslate"><span class="pre">t</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – Parameter along the guiding curve.</p></li>
+<li><p><strong>resolution</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of angular samples.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array of size <code class="docutils literal notranslate"><span class="pre">(resolution,</span> <span class="pre">3)</span></code> describing the ring.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.PipeSurface.pointcloud">
+<span class="sig-name descname"><span class="pre">pointcloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resolution_circle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#PipeSurface.pointcloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.PipeSurface.pointcloud" title="Link to this definition">¶</a></dt>
+<dd><p>Sample the full pipe surface as a structured array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>resolution_circle</strong> (<em>int</em><em>, </em><em>optional</em>) – Points per circle.</p></li>
+<li><p><strong>resolution_time</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of samples along the path.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Structured array with shape <code class="docutils literal notranslate"><span class="pre">(resolution_time,</span> <span class="pre">resolution_circle,</span> <span class="pre">3)</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.PipeSurface.mesh_data">
+<span class="sig-name descname"><span class="pre">mesh_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resolution_circle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#PipeSurface.mesh_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.PipeSurface.mesh_data" title="Link to this definition">¶</a></dt>
+<dd><p>Return vertices/faces describing the tube surface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Flattened vertices and triangular faces.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.PipeSurface.mesh">
+<span class="sig-name descname"><span class="pre">mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution_circle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#PipeSurface.mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.PipeSurface.mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Build the <code class="xref py py-class docutils literal notranslate"><span class="pre">trimesh.Trimesh</span></code> pipe, optionally capping the ends.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Triangulated pipe surface.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>trimesh.Trimesh</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.PipeSurface.export_mesh">
+<span class="sig-name descname"><span class="pre">export_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution_circle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#PipeSurface.export_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.PipeSurface.export_mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Export a discretized pipe to <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MeshGenerator.Cylinder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MeshGenerator.</span></span><span class="sig-name descname"><span class="pre">Cylinder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bottom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sections</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Cylinder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Cylinder" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Create a cylinder via <code class="xref py py-mod docutils literal notranslate"><span class="pre">trimesh.creation</span></code> aligned with arbitrary endpoints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bottom</strong> (<em>array-like</em><em> of </em><em>shape</em><em> (</em><em>3</em><em>,</em><em>)</em>) – Base point of the cylinder axis.</p></li>
+<li><p><strong>top</strong> (<em>array-like</em><em> of </em><em>shape</em><em> (</em><em>3</em><em>,</em><em>)</em>) – End point of the cylinder axis.</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – Cylinder radius.</p></li>
+<li><p><strong>sections</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of radial segments passed to <code class="docutils literal notranslate"><span class="pre">trimesh.creation.cylinder</span></code> (default <code class="docutils literal notranslate"><span class="pre">32</span></code>).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MeshGenerator.Cylinder.bottom">
+<span class="sig-name descname"><span class="pre">bottom</span></span><a class="headerlink" href="#MeshGenerator.Cylinder.bottom" title="Link to this definition">¶</a></dt>
+<dd><p>Stored copy of the base point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MeshGenerator.Cylinder.top">
+<span class="sig-name descname"><span class="pre">top</span></span><a class="headerlink" href="#MeshGenerator.Cylinder.top" title="Link to this definition">¶</a></dt>
+<dd><p>Stored copy of the top point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MeshGenerator.Cylinder.radius">
+<span class="sig-name descname"><span class="pre">radius</span></span><a class="headerlink" href="#MeshGenerator.Cylinder.radius" title="Link to this definition">¶</a></dt>
+<dd><p>Cylinder radius.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MeshGenerator.Cylinder.sections">
+<span class="sig-name descname"><span class="pre">sections</span></span><a class="headerlink" href="#MeshGenerator.Cylinder.sections" title="Link to this definition">¶</a></dt>
+<dd><p>Radial tessellation used for the procedural mesh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Cylinder.mesh">
+<span class="sig-name descname"><span class="pre">mesh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Cylinder.mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Cylinder.mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Return a <code class="xref py py-class docutils literal notranslate"><span class="pre">trimesh.Trimesh</span></code> oriented between <code class="docutils literal notranslate"><span class="pre">bottom</span></code> and <code class="docutils literal notranslate"><span class="pre">top</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Procedurally generated cylinder.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>trimesh.Trimesh</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Cylinder.mesh_data">
+<span class="sig-name descname"><span class="pre">mesh_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Cylinder.mesh_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Cylinder.mesh_data" title="Link to this definition">¶</a></dt>
+<dd><p>Return the vertices and faces of the procedurally generated cylinder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Vertex and face arrays.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Cylinder.export_mesh">
+<span class="sig-name descname"><span class="pre">export_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Cylinder.export_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Cylinder.export_mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Export the procedurally generated cylinder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em> or </em><em>path-like</em>) – Output file path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MeshGenerator.RuledSurface">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MeshGenerator.</span></span><span class="sig-name descname"><span class="pre">RuledSurface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curve1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#RuledSurface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.RuledSurface" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Interpolate between two parametric curves to form a ruled surface.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.RuledSurface.point">
+<span class="sig-name descname"><span class="pre">point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#RuledSurface.point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.RuledSurface.point" title="Link to this definition">¶</a></dt>
+<dd><p>Evaluate the ruled surface at <code class="docutils literal notranslate"><span class="pre">s</span></code> and <code class="docutils literal notranslate"><span class="pre">t</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Point on the surface corresponding to <code class="docutils literal notranslate"><span class="pre">(s,</span> <span class="pre">t)</span></code>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.RuledSurface.pointcloud">
+<span class="sig-name descname"><span class="pre">pointcloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#RuledSurface.pointcloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.RuledSurface.pointcloud" title="Link to this definition">¶</a></dt>
+<dd><p>Return a structured grid sampling the ruled surface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of shape <code class="docutils literal notranslate"><span class="pre">(t_resolution,</span> <span class="pre">s_resolution,</span> <span class="pre">3)</span></code>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.RuledSurface.mesh_data">
+<span class="sig-name descname"><span class="pre">mesh_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#RuledSurface.mesh_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.RuledSurface.mesh_data" title="Link to this definition">¶</a></dt>
+<dd><p>Return vertices and faces describing the ruled surface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Flattened vertices plus triangular faces.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.RuledSurface.mesh">
+<span class="sig-name descname"><span class="pre">mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#RuledSurface.mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.RuledSurface.mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Build the <code class="xref py py-class docutils literal notranslate"><span class="pre">trimesh.Trimesh</span></code> for the ruled surface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Mesh describing the ruled surface.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>trimesh.Trimesh</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.RuledSurface.export_mesh">
+<span class="sig-name descname"><span class="pre">export_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#RuledSurface.export_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.RuledSurface.export_mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Export the ruled surface mesh to <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MeshGenerator.CircleEnvelope">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MeshGenerator.</span></span><span class="sig-name descname"><span class="pre">CircleEnvelope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contact_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#CircleEnvelope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.CircleEnvelope" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Envelope surface generated by sweeping circles along a path.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.CircleEnvelope.axis_normalized">
+<span class="sig-name descname"><span class="pre">axis_normalized</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#CircleEnvelope.axis_normalized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.CircleEnvelope.axis_normalized" title="Link to this definition">¶</a></dt>
+<dd><p>Return normalized axis vectors for each sample.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array with the same shape as <code class="docutils literal notranslate"><span class="pre">axis</span></code> containing unit normals.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.CircleEnvelope.triangulation">
+<span class="sig-name descname"><span class="pre">triangulation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#CircleEnvelope.triangulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.CircleEnvelope.triangulation" title="Link to this definition">¶</a></dt>
+<dd><p>Triangulate the parameter space spanned by angle and time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Triangle indices over the structured parameter grid.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.CircleEnvelope.pointcloud">
+<span class="sig-name descname"><span class="pre">pointcloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resolution_circle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#CircleEnvelope.pointcloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.CircleEnvelope.pointcloud" title="Link to this definition">¶</a></dt>
+<dd><p>Return the sampled envelope points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>resolution_circle</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of samples per circle; defaults to <code class="docutils literal notranslate"><span class="pre">angle_resolution</span></code>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array of shape <code class="docutils literal notranslate"><span class="pre">(time_resolution,</span> <span class="pre">resolution_circle,</span> <span class="pre">3)</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.CircleEnvelope.mesh">
+<span class="sig-name descname"><span class="pre">mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resolution_circle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#CircleEnvelope.mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.CircleEnvelope.mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Build a <code class="xref py py-class docutils literal notranslate"><span class="pre">trimesh.Trimesh</span></code> envelope.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Triangular mesh for the swept envelope.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>trimesh.Trimesh</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.CircleEnvelope.export_mesh">
+<span class="sig-name descname"><span class="pre">export_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution_circle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#CircleEnvelope.export_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.CircleEnvelope.export_mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Export the envelope mesh to <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em> or </em><em>path-like</em>) – Destination path.</p></li>
+<li><p><strong>resolution_circle</strong> (<em>int</em><em>, </em><em>optional</em>) – Passed to <a class="reference internal" href="#MeshGenerator.CircleEnvelope.pointcloud" title="MeshGenerator.CircleEnvelope.pointcloud"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pointcloud()</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MeshGenerator.Heatmap">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MeshGenerator.</span></span><span class="sig-name descname"><span class="pre">Heatmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_of_scalars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'turbo_r'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Heatmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Heatmap" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Attach scalar data to meshes and visualize/export them.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Heatmap.scalars_to_colors">
+<span class="sig-name descname"><span class="pre">scalars_to_colors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Heatmap.scalars_to_colors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Heatmap.scalars_to_colors" title="Link to this definition">¶</a></dt>
+<dd><p>Convert scalar field to RGBA colors using the configured colorscale.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>RGBA values in <code class="docutils literal notranslate"><span class="pre">uint8</span></code> format.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Heatmap.export_mesh">
+<span class="sig-name descname"><span class="pre">export_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Heatmap.export_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Heatmap.export_mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Export the colored mesh to <code class="docutils literal notranslate"><span class="pre">name</span></code> (PLY enforced).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em> or </em><em>path-like</em>) – Output path ending with <code class="docutils literal notranslate"><span class="pre">.ply</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Heatmap.plotly_figure">
+<span class="sig-name descname"><span class="pre">plotly_figure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">showlegend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Heatmap'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Heatmap.plotly_figure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Heatmap.plotly_figure" title="Link to this definition">¶</a></dt>
+<dd><p>Create a Plotly figure visualizing the colored surface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>showlegend</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to display legend entries.</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Trace label.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Interactive heatmap figure.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MeshGenerator.Torus">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MeshGenerator.</span></span><span class="sig-name descname"><span class="pre">Torus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">center</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_major</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_minor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Torus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Torus" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Procedurally create a torus oriented along an arbitrary axis.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Torus.mesh">
+<span class="sig-name descname"><span class="pre">mesh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Torus.mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Torus.mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Build the rotated torus as a <code class="xref py py-class docutils literal notranslate"><span class="pre">trimesh.Trimesh</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Torus mesh aligned to <code class="docutils literal notranslate"><span class="pre">axis</span></code> and centered at <code class="docutils literal notranslate"><span class="pre">center</span></code>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>trimesh.Trimesh</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MeshGenerator.Torus.export_mesh">
+<span class="sig-name descname"><span class="pre">export_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/MeshGenerator.html#Torus.export_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MeshGenerator.Torus.export_mesh" title="Link to this definition">¶</a></dt>
+<dd><p>Export the torus mesh to <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em> or </em><em>path-like</em>) – Destination path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">MillingAround</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#millingaround">MillingAround</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cylinder_collision_detection.html">CylinderCollisionDetection</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">MeshGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="point_milling_backend.html">point_milling_backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="point_milling_frontend.html">point_milling_frontend</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">API Reference</a><ul>
+      <li>Previous: <a href="cylinder_collision_detection.html" title="previous chapter">CylinderCollisionDetection</a></li>
+      <li>Next: <a href="point_milling_backend.html" title="next chapter">point_milling_backend</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, J. Zaragoza-Chichell.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.0.2</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/api/mesh_generator.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

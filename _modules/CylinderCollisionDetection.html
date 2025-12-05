@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CylinderCollisionDetection &#8212; MillingAround 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=c058f7c8" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for CylinderCollisionDetection</h1><div class="highlight"><pre>
+<span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This library is designed for collision detection of cylinders against triangle meshes.</span>
+<span class="sd">It contains the implementation described in our SPM2024 paper and the Propositions 1&amp;amp;2</span>
+<span class="sd">that appear there.</span>
+
+<span class="sd">Modules:</span>
+<span class="sd">- numpy: For numerical operations.</span>
+<span class="sd">- open3d: For 3D geometry operations and visualizations.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="c1"># import trimesh</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">open3d</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">o3d</span>
+
+<span class="c1"># index columns for information_matrix</span>
+<span class="n">index_of_is_cylinder_colliding</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">index_of_cylinder_index</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">index_of_bottom</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">index_of_top</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">index_of_list_of_points_in_cylinder</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">index_of_list_of_footpoints</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">index_of_list_of_safe_distances</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">index_of_collision_indices</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">index_of_list_of_iterations</span> <span class="o">=</span> <span class="mi">8</span>
+
+<span class="c1"># Helper class: CollisionInformation</span>
+<div class="viewcode-block" id="CollisionInformation">
+<a class="viewcode-back" href="../api/cylinder_collision_detection.html#CylinderCollisionDetection.CollisionInformation">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CollisionInformation</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Wrapper providing structured access to the information_matrix returned by the cylinder collision routines.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    information_matrix : np.ndarray</span>
+<span class="sd">        The object-typed NumPy array produced by the collision detection routines</span>
+<span class="sd">        in :class:`MultipleCylinders`.</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    information_matrix : np.ndarray</span>
+<span class="sd">        Raw table where each row stores the intermediate results for one cylinder.</span>
+<span class="sd">    is_cylinder_colliding : np.ndarray</span>
+<span class="sd">        Boolean flag per row indicating whether the sample is currently colliding.</span>
+<span class="sd">    cylinder_index : np.ndarray</span>
+<span class="sd">        Integer identifiers tying each row back to the original cylinder list.</span>
+<span class="sd">    bottoms : np.ndarray</span>
+<span class="sd">        Bottom points of each cylinder segment.</span>
+<span class="sd">    tops : np.ndarray</span>
+<span class="sd">        Top points of each cylinder segment.</span>
+<span class="sd">    points_in_cylinder : np.ndarray</span>
+<span class="sd">        Sampled points that were inspected along the cylinder axis.</span>
+<span class="sd">    footpoints : np.ndarray</span>
+<span class="sd">        Closest mesh points (and associated metadata) returned by the raycasting scene.</span>
+<span class="sd">    safe_distances : np.ndarray</span>
+<span class="sd">        Signed safety margins computed for every inspected point.</span>
+<span class="sd">    collision_indices : np.ndarray</span>
+<span class="sd">        Integer labels encoding the collision state (-2 undetermined, 0 colliding, etc.).</span>
+<span class="sd">    iterations : np.ndarray</span>
+<span class="sd">        Iteration counters produced by the iterative refinement loop.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    colliding_ids()</span>
+<span class="sd">        Return the IDs of cylinders currently classified as colliding.</span>
+<span class="sd">    non_colliding_ids()</span>
+<span class="sd">        Return the IDs of cylinders cleared of collision.</span>
+<span class="sd">    save(filepath, compressed=True)</span>
+<span class="sd">        Persist the wrapped matrix to disk for later inspection.</span>
+<span class="sd">    load(filepath)</span>
+<span class="sd">        Restore a :class:`CollisionInformation` instance from a ``.npz`` artifact.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">information_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">information_matrix</span>     <span class="o">=</span> <span class="n">information_matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_cylinder_colliding</span>  <span class="o">=</span> <span class="n">information_matrix</span><span class="p">[:,</span> <span class="n">index_of_is_cylinder_colliding</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cylinder_index</span>         <span class="o">=</span> <span class="n">information_matrix</span><span class="p">[:,</span> <span class="n">index_of_cylinder_index</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bottoms</span>                <span class="o">=</span> <span class="n">information_matrix</span><span class="p">[:,</span> <span class="n">index_of_bottom</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tops</span>                   <span class="o">=</span> <span class="n">information_matrix</span><span class="p">[:,</span> <span class="n">index_of_top</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points_in_cylinder</span>     <span class="o">=</span> <span class="n">information_matrix</span><span class="p">[:,</span> <span class="n">index_of_list_of_points_in_cylinder</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">footpoints</span>             <span class="o">=</span> <span class="n">information_matrix</span><span class="p">[:,</span> <span class="n">index_of_list_of_footpoints</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">safe_distances</span>         <span class="o">=</span> <span class="n">information_matrix</span><span class="p">[:,</span> <span class="n">index_of_list_of_safe_distances</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collision_indices</span>      <span class="o">=</span> <span class="n">information_matrix</span><span class="p">[:,</span> <span class="n">index_of_collision_indices</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span>             <span class="o">=</span> <span class="n">information_matrix</span><span class="p">[:,</span> <span class="n">index_of_list_of_iterations</span><span class="p">]</span>
+
+    <span class="c1"># Convenience helpers</span>
+<div class="viewcode-block" id="CollisionInformation.colliding_ids">
+<a class="viewcode-back" href="../api/cylinder_collision_detection.html#CylinderCollisionDetection.CollisionInformation.colliding_ids">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">colliding_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return indices of cylinders classified as colliding.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cylinder_index</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">is_cylinder_colliding</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="CollisionInformation.non_colliding_ids">
+<a class="viewcode-back" href="../api/cylinder_collision_detection.html#CylinderCollisionDetection.CollisionInformation.non_colliding_ids">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">non_colliding_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return indices of cylinders classified as free of collision.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cylinder_index</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">is_cylinder_colliding</span> <span class="o">==</span> <span class="kc">False</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="CollisionInformation.save">
+<a class="viewcode-back" href="../api/cylinder_collision_detection.html#CylinderCollisionDetection.CollisionInformation.save">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">compressed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Save the underlying information matrix to a NumPy ``.npz`` archive.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filepath : str or pathlib.Path</span>
+<span class="sd">            Destination file path. If the provided path does not end with</span>
+<span class="sd">            ``.npz`` the extension will be appended automatically.</span>
+<span class="sd">        compressed : bool, optional</span>
+<span class="sd">            Use :func:`numpy.savez_compressed` when *True* (default) for</span>
+<span class="sd">            smaller files at the cost of a little CPU time. Set to *False*</span>
+<span class="sd">            to use :func:`numpy.savez` instead.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.npz&quot;</span><span class="p">):</span>
+            <span class="n">filepath</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">.npz&quot;</span>
+        <span class="n">saver</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">savez_compressed</span> <span class="k">if</span> <span class="n">compressed</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">savez</span>
+        <span class="c1"># Information matrix can contain Python objects, so we just pass it</span>
+        <span class="c1"># directly—NumPy will store it as an ``object`` array.</span>
+        <span class="n">saver</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">information_matrix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">information_matrix</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CollisionInformation.load">
+<a class="viewcode-back" href="../api/cylinder_collision_detection.html#CylinderCollisionDetection.CollisionInformation.load">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Load a :class:`CollisionInformation` instance from a ``.npz`` file.</span>
+
+<span class="sd">    This mirrors the ``load`` classmethod used for shank collision</span>
+<span class="sd">    information and simply reconstructs the wrapper around the stored</span>
+<span class="sd">    ``information_matrix``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">allow_pickle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">information_matrix</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;information_matrix&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">information_matrix</span><span class="p">)</span></div>
+</div>
+
+
+<span class="c1">#####################</span>
+<span class="c1">#  previous functions</span>
+<span class="c1">#####################</span>
+<div class="viewcode-block" id="are_points_on_boundary">
+<a class="viewcode-back" href="../api/cylinder_collision_detection.html#CylinderCollisionDetection.are_points_on_boundary">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">are_points_on_boundary</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Check whether points lie on the boundary of the unit square.</span>
+
+<span class="sd">    The boundary is defined in the :math:`XY` plane by the lines</span>
+<span class="sd">    ``x = 0``, ``x = 1``, ``y = 0`` or ``y = 1``. The input can be</span>
+<span class="sd">    either</span>
+
+<span class="sd">    - a NumPy array of shape ``(n, 3)``, interpreted as ``n`` 3D points,</span>
+<span class="sd">    - or a NumPy array of shape ``(3,)``, interpreted as a single 3D</span>
+<span class="sd">      point.</span>
+
+<span class="sd">    For each point, the result is ``True`` if its ``x`` or ``y``</span>
+<span class="sd">    coordinate is ``0`` or ``1``, and ``False`` otherwise.</span>
+
+<span class="sd">    Assumes the mesh is defined above the unit square in the XY plane.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    A : numpy.ndarray</span>
+<span class="sd">        Input array of shape ``(n, 3)`` or ``(3,)``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray or bool</span>
+<span class="sd">        A boolean array of length ``n`` when ``A`` has shape ``(n, 3)``,</span>
+<span class="sd">        or a single boolean when ``A`` has shape ``(3,)``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check if A is a vector (shape (3,)) or an array of shape (n, 3)</span>
+    <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># It&#39;s a vector</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># It&#39;s an array</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">A</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">A</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">A</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">A</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="signs_points_to_surface">
+<a class="viewcode-back" href="../api/cylinder_collision_detection.html#CylinderCollisionDetection.signs_points_to_surface">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">signs_points_to_surface</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">footpoints</span><span class="p">,</span> <span class="n">vectors</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine on which side of a surface points lie.</span>
+
+<span class="sd">    This function computes the sign of the dot product between</span>
+<span class="sd">    ``points - footpoints`` and the normal vectors at the footpoints.</span>
+<span class="sd">    It effectively tells whether each point is above, below, or exactly</span>
+<span class="sd">    on the local tangent plane defined at its corresponding footpoint.</span>
+
+<span class="sd">    Vectorized NumPy operations are used to efficiently handle many</span>
+<span class="sd">    points at once.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    points : np.ndarray</span>
+<span class="sd">        Array of shape ``(n, 3)`` with the coordinates of the points.</span>
+<span class="sd">    footpoints : np.ndarray</span>
+<span class="sd">        Array of shape ``(n, 3)`` with the closest points on the surface</span>
+<span class="sd">        corresponding to each point in ``points``.</span>
+<span class="sd">    vectors : np.ndarray</span>
+<span class="sd">        Array of shape ``(n, 3)`` with the surface normal vectors at</span>
+<span class="sd">        each footpoint.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        One-dimensional array of shape ``(n,)`` containing the sign of</span>
+<span class="sd">        the dot product between ``points - footpoints`` and ``vectors``.</span>
+<span class="sd">        The sign indicates the relative position of each point:</span>
+
+<span class="sd">        - ``+1`` if the point is in the direction of the normal (above the surface),</span>
+<span class="sd">        - ``-1`` if it is on the opposite side (below the surface),</span>
+<span class="sd">        - ``0`` if it lies exactly on the surface.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ij-&gt;i&#39;</span><span class="p">,</span> <span class="n">vectors</span><span class="p">,</span> <span class="n">points</span><span class="o">-</span><span class="n">footpoints</span><span class="p">))</span> <span class="c1"># checks plane side but faster!</span></div>
+
+
+<div class="viewcode-block" id="check_plane_side">
+<a class="viewcode-back" href="../api/cylinder_collision_detection.html#CylinderCollisionDetection.check_plane_side">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_plane_side</span><span class="p">(</span><span class="n">point_to_check</span><span class="p">,</span> <span class="n">normal_vector</span><span class="p">,</span> <span class="n">point_in_plane</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine on which side of a plane points lie.</span>
+
+<span class="sd">    This function computes the signed scalar projection (dot product) of</span>
+<span class="sd">    ``point_to_check - point_in_plane`` onto the plane&#39;s normal vector.</span>
+<span class="sd">    The sign of this projection indicates whether each point is on the</span>
+<span class="sd">    normal side of the plane, on the opposite side, or exactly on the plane.</span>
+
+<span class="sd">    Both single-point and multi-point evaluations are supported, as well as</span>
+<span class="sd">    a single plane or multiple planes at once.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    point_to_check : np.ndarray</span>
+<span class="sd">        Points whose position relative to the plane is to be determined.</span>
+<span class="sd">        Either shape ``(n, 3)`` for ``n`` points or ``(3,)`` for a single point.</span>
+<span class="sd">    normal_vector : np.ndarray</span>
+<span class="sd">        Normal vector(s) to the plane. Shape ``(3,)`` for a single plane</span>
+<span class="sd">        or ``(n, 3)`` for multiple planes.</span>
+<span class="sd">    point_in_plane : np.ndarray</span>
+<span class="sd">        Point(s) on the plane. Shape ``(3,)`` for a single plane or the</span>
+<span class="sd">        same shape as ``normal_vector`` when multiple planes are used.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray or float</span>
+<span class="sd">        Signed distance value(s) from each ``point_to_check`` to the plane</span>
+<span class="sd">        defined by ``point_in_plane`` and ``normal_vector``. Positive values</span>
+<span class="sd">        indicate the point is on the side of the normal vector, negative</span>
+<span class="sd">        values indicate the opposite side, and zero means the point lies</span>
+<span class="sd">        exactly on the plane.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - The implementation is vectorized to efficiently handle multiple</span>
+<span class="sd">    points and multiple planes at once.</span>
+<span class="sd">    - This is useful in computational geometry tasks such as rendering,</span>
+<span class="sd">    collision detection, and any application where relative position to</span>
+<span class="sd">    a plane must be quantified.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># evaluates &lt;v, p-a&gt;, where v is the normal vector to a plane</span>
+    <span class="c1"># a is a point in the plane and p is the point we want to check</span>
+    <span class="c1"># since we want for multiple points, matrix implementation follows</span>
+    <span class="k">if</span> <span class="n">normal_vector</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">normal_vector</span><span class="p">,</span> <span class="p">(</span><span class="n">point_to_check</span> <span class="o">-</span> <span class="n">point_in_plane</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">normal_vector</span> <span class="p">,</span> <span class="n">point_to_check</span> <span class="o">-</span> <span class="n">point_in_plane</span><span class="p">)])</span></div>
+
+
+<div class="viewcode-block" id="MultipleCylinders">
+<a class="viewcode-back" href="../api/cylinder_collision_detection.html#CylinderCollisionDetection.MultipleCylinders">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MultipleCylinders</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Manages collision detection among multiple cylinders against a given mesh.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    ----------</span>
+<span class="sd">    set_of_cylinders : np.ndarray</span>
+<span class="sd">        An array of cylinders where each cylinder is represented by two points representing their medial axis (start and end), shape (N, 2, 3).</span>
+<span class="sd">    mesh : open3d.geometry.TriangleMesh</span>
+<span class="sd">        The mesh object which may interact with the cylinders.</span>
+<span class="sd">    scene : open3d.t.geometry.RaycastingScene</span>
+<span class="sd">        A scene object from Open3D that supports efficient raycasting operations.</span>
+<span class="sd">    R : float</span>
+<span class="sd">        The radius of the cylinders, used in collision computations.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bottoms : np.ndarray</span>
+<span class="sd">        Starting points of each cylinder.</span>
+<span class="sd">    tops : np.ndarray</span>
+<span class="sd">        Ending points of each cylinder.</span>
+<span class="sd">    axis_vector : np.ndarray</span>
+<span class="sd">        The direction vector from the top to the bottom of each cylinder.</span>
+<span class="sd">    L : float</span>
+<span class="sd">        Length of the axis vector (assumed uniform across all cylinders).</span>
+<span class="sd">    unitary_vectors : np.ndarray</span>
+<span class="sd">        Normalized axis vectors for each cylinder.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">set_of_cylinders</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">scene</span><span class="p">,</span> <span class="n">R</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Multiplecylinders object with necessary geometry and collision detection settings.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        ----------</span>
+<span class="sd">        set_of_cylinders : np.ndarray</span>
+<span class="sd">            An array of shape (N, 2, 3) where N is the number of cylinders. Each cylinder is represented by two points (bottom and top),</span>
+<span class="sd">            which define the linear segment of the cylinder in 3D space.</span>
+<span class="sd">        mesh : open3d.geometry.TriangleMesh</span>
+<span class="sd">            The mesh against which the cylinders will be checked for collisions.</span>
+<span class="sd">        scene : open3d.t.geometry.RaycastingScene</span>
+<span class="sd">            A pre-configured scene from Open3D that includes the mesh. This scene is used for efficient raycasting operations</span>
+<span class="sd">            necessary for collision detection.</span>
+<span class="sd">        R : float</span>
+<span class="sd">            The radius of the cylinders, used to determine the collision boundary around each cylinder. This parameter defines</span>
+<span class="sd">            the safety envelope around the linear segments of the cylinders.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">        ----------</span>
+<span class="sd">        bottoms : np.ndarray</span>
+<span class="sd">            The starting points (bottoms) of each cylinder, derived directly from `set_of_cylinders`.</span>
+<span class="sd">        tops : np.ndarray</span>
+<span class="sd">            The ending points (tops) of each cylinder, also derived from `set_of_cylinders`.</span>
+<span class="sd">        axis_vector : np.ndarray</span>
+<span class="sd">            Vectors from the tops to the bottoms of each cylinder, indicating the directional axis of the cylinders.</span>
+<span class="sd">        L : float</span>
+<span class="sd">            The length of the axis vector from the first cylinder. Used to normalize axis vectors.</span>
+<span class="sd">        unitary_vectors : np.ndarray</span>
+<span class="sd">            Normalized axis vectors for each cylinder, calculated as the unit vector along the direction from top to bottom.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_of_cylinders</span> <span class="o">=</span> <span class="n">set_of_cylinders</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scene</span> <span class="o">=</span> <span class="n">scene</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="n">R</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bottoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_of_cylinders</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tops</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_of_cylinders</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axis_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bottoms</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">tops</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unitary_vectors</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">axis_vector</span>
+
+<div class="viewcode-block" id="MultipleCylinders.distance_to_axis">
+<a class="viewcode-back" href="../api/cylinder_collision_detection.html#CylinderCollisionDetection.MultipleCylinders.distance_to_axis">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">distance_to_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">working_indices</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute perpendicular distances from points to cylinder axes.</span>
+
+<span class="sd">        Given a set of 3D points and their corresponding cylinder indices,</span>
+<span class="sd">        this method returns the shortest (orthogonal) distance from each</span>
+<span class="sd">        point to the axis of its associated cylinder.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        points : np.ndarray</span>
+<span class="sd">            Array of shape ``(n, 3)`` with the 3D points whose distance to a</span>
+<span class="sd">            cylinder axis is to be computed.</span>
+<span class="sd">        working_indices : np.ndarray</span>
+<span class="sd">            Integer array of shape ``(n,)`` giving, for each point in</span>
+<span class="sd">            ``points``, the index of the cylinder it is associated with. These</span>
+<span class="sd">            indices are used to select the appropriate cylinder tops and unit</span>
+<span class="sd">            direction vectors.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        distances : np.ndarray</span>
+<span class="sd">            Array of shape ``(n,)`` containing the perpendicular distance from</span>
+<span class="sd">            each point in ``points`` to the axis of its associated cylinder.</span>
+<span class="sd">            Distances are computed as the norm of the component of</span>
+<span class="sd">            ``points - top`` orthogonal to the cylinder’s axis vector.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The computation uses vector projection to decompose the vector from the</span>
+<span class="sd">        cylinder top to each point into components parallel and orthogonal to</span>
+<span class="sd">        the axis direction, and then takes the norm of the orthogonal</span>
+<span class="sd">        component.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">working_tops</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tops</span><span class="p">[</span><span class="n">working_indices</span><span class="p">]</span> <span class="c1"># select approriate tops</span>
+        <span class="n">working_unitary_vectors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unitary_vectors</span><span class="p">[</span><span class="n">working_indices</span><span class="p">]</span> <span class="c1"># select appropriate unitary vectors</span>
+        <span class="c1"># compute the points in the cylinder that are perpendicular to the input points</span>
+        <span class="n">parameters_in_cylinder</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ij-&gt;i&#39;</span><span class="p">,</span> <span class="n">working_unitary_vectors</span><span class="p">,</span> <span class="n">points</span> <span class="o">-</span> <span class="n">working_tops</span><span class="p">)</span> <span class="c1"># the parameter on the cylinder is given by &lt;footpoint -top, unit_vector&gt;</span>
+        <span class="n">points_in_cylinder</span>  <span class="o">=</span> <span class="n">working_tops</span> <span class="o">+</span> <span class="p">(</span><span class="n">parameters_in_cylinder</span><span class="o">*</span><span class="n">working_unitary_vectors</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="c1"># point = top + paremeter*unit_vector</span>
+        <span class="c1">#finally, compute the distances</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">points_in_cylinder</span> <span class="o">-</span> <span class="n">points</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">distances</span></div>
+
+
+<div class="viewcode-block" id="MultipleCylinders.compute_safe_spheres">
+<a class="viewcode-back" href="../api/cylinder_collision_detection.html#CylinderCollisionDetection.MultipleCylinders.compute_safe_spheres">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_safe_spheres</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_of_points</span><span class="p">,</span> <span class="n">working_indices</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes safety spheres around given points to determine potential collision states with a mesh.</span>
+
+<span class="sd">        Collision detection is based on the definition given in our SPM2024 paper and the Propositions 1&amp;amp;2</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        ----------</span>
+<span class="sd">        list_of_points : list or np.ndarray</span>
+<span class="sd">            Points to evaluate for potential collisions, expected to be an array-like structure of 3D points.</span>
+<span class="sd">        working_indices : list or np.ndarray</span>
+<span class="sd">            Indices of cylinders corresponding to each point in `list_of_points`. This maps each point to a specific</span>
+<span class="sd">            cylinder for assessing its relationship with the mesh in the context of that cylinder&#39;s position and orientation.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        -------</span>
+<span class="sd">        collision_index : np.ndarray</span>
+<span class="sd">            An array indicating the collision status for each point:</span>
+<span class="sd">            - -2: Undetermined (initial state).</span>
+<span class="sd">            - 1: Non-colliding (safe).</span>
+<span class="sd">            - 0: Colliding.</span>
+<span class="sd">            - -1: Footpoint below the tool cutter (considered safe).</span>
+<span class="sd">        list_of_points : np.ndarray</span>
+<span class="sd">            The original list of points passed to the function, formatted as a NumPy array.</span>
+<span class="sd">        footpoints : np.ndarray</span>
+<span class="sd">            The nearest points on the mesh to each point in `list_of_points`.</span>
+<span class="sd">        safe_distances : np.ndarray</span>
+<span class="sd">            Calculated safe distances from each point to its corresponding footpoint, adjusted for the cylinder&#39;s radius.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">        -----</span>
+<span class="sd">        - The method uses the scene&#39;s raycasting capabilities to find the nearest mesh points (footpoints) for the given points.</span>
+<span class="sd">        - It calculates whether these points are on the boundary of the mesh, above or below the tool&#39;s cutting plane,</span>
+<span class="sd">        and their perpendicular distance to the cylinder axis to assess collision risks.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">collision_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_of_points</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="c1"># set the indicies to undetermined by default</span>
+        <span class="n">list_of_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">list_of_points</span><span class="p">)</span> <span class="c1"># convert into numpy array</span>
+
+        <span class="c1"># get footpoints and the triangles they lie on</span>
+        <span class="n">footpoints_triangles_and_such</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">compute_closest_points</span><span class="p">(</span>
+            <span class="n">list_of_points</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+        <span class="n">footpoints</span> <span class="o">=</span> <span class="n">footpoints_triangles_and_such</span><span class="p">[</span><span class="s1">&#39;points&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="n">triangles</span> <span class="o">=</span> <span class="n">footpoints_triangles_and_such</span><span class="p">[</span><span class="s1">&#39;primitive_ids&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+        <span class="c1"># compute distance between the points and the footpoints</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">footpoints</span> <span class="o">-</span> <span class="n">list_of_points</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># checkplane side for the footpoints</span>
+        <span class="n">footpoints_tool_side</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ij-&gt;i&#39;</span><span class="p">,</span> 
+                                         <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">axis_vector</span><span class="p">[</span><span class="n">working_indices</span><span class="p">],</span> 
+                                         <span class="n">footpoints</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">bottoms</span><span class="p">[</span><span class="n">working_indices</span><span class="p">])</span> <span class="c1"># checks plane side but faster!</span>
+        
+        <span class="c1"># if footpoints_tool_side is negative, then the footpoint lies below the tool cutting plane (hence non colliding)</span>
+        <span class="n">collision_index</span><span class="p">[</span><span class="n">footpoints_tool_side</span> <span class="o">&lt;=</span> <span class="mf">1e-6</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="c1"># label those as non colliding </span>
+        <span class="c1"># 1e-6 is used insted of 0 or the sake of numerical rounding</span>
+
+        <span class="c1"># get sign of the distance from the points to the surface</span>
+        <span class="n">signs_point_to_surface</span> <span class="o">=</span> <span class="n">signs_points_to_surface</span><span class="p">(</span><span class="n">list_of_points</span><span class="p">,</span>
+                                                            <span class="n">footpoints</span><span class="p">,</span> 
+                                                            <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">triangle_normals</span><span class="p">)[</span><span class="n">triangles</span><span class="p">])</span>
+        
+        <span class="n">are_footpoints_on_boundary</span> <span class="o">=</span> <span class="n">are_points_on_boundary</span><span class="p">(</span><span class="n">footpoints</span><span class="p">)</span> <span class="c1"># check if a footpoint is on the boundary</span>
+        <span class="c1"># if the point has footpoint on the boundary and is labeled to be below tool the surface, change its value</span>
+        <span class="n">signs_point_to_surface</span><span class="p">[(</span><span class="n">signs_point_to_surface</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">are_footpoints_on_boundary</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>  
+        <span class="n">safe_distances</span> <span class="o">=</span> <span class="n">signs_point_to_surface</span><span class="o">*</span><span class="n">distances</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="c1"># get safe distance for the safe balls</span>
+        <span class="n">distances_to_cylinders</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_to_axis</span><span class="p">(</span><span class="n">footpoints</span><span class="p">,</span> <span class="n">working_indices</span><span class="p">)</span> <span class="c1"># get distance to the cylinders</span>
+        <span class="c1"># distances_to_cylinders &lt; self.R - 0.000125 aims to avoid collision detection with footpoints that lie on the cutting tool</span>
+        <span class="n">collision_index</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span> <span class="n">safe_distances</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span>  <span class="n">distances_to_cylinders</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">-</span> <span class="mf">0.000125</span><span class="p">),</span> <span class="n">collision_index</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># if the footpoint lies on the cutting edge, the tool is non colliding either</span>
+        <span class="c1"># the previous computations have made sure that the footpoint does not lie inside the cylinder, nor below the cutting plane</span>
+        <span class="c1"># hence we can check if it is in the cutting edge by measuring the distace with a threshold</span>
+        <span class="n">distances_to_bottoms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">footpoints</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">bottoms</span><span class="p">[</span><span class="n">working_indices</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span><span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span>
+        <span class="n">collision_index</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">collision_index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">distances_to_bottoms</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">distances_to_bottoms</span><span class="p">)),</span> <span class="n">atol</span><span class="o">=</span><span class="mf">5e-4</span><span class="p">))]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="c1"># it could happen that you are moving further away from the bottom. Hence, the point is non colliding</span>
+        <span class="c1"># we are gonna check this by measuring the distance to the top.</span>
+        <span class="c1"># That is going to be measured as the distance from the point to the top plus the safe distance</span>
+        <span class="c1"># since that is what would give the next point for computation</span>
+        <span class="n">distance_to_tops</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">list_of_points</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">tops</span><span class="p">[</span><span class="n">working_indices</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span>  <span class="n">safe_distances</span>
+        <span class="n">distance_compared_to_top</span> <span class="o">=</span> <span class="n">distance_to_tops</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="c1"># measures the excess in case that there is some</span>
+        <span class="n">collision_index</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">collision_index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">distance_compared_to_top</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="n">collision_index</span><span class="p">[</span><span class="n">collision_index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">collision_index</span><span class="p">,</span> <span class="n">list_of_points</span><span class="p">,</span> <span class="n">footpoints</span><span class="p">,</span> <span class="n">safe_distances</span><span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="MultipleCylinders.get_next_points">
+<a class="viewcode-back" href="../api/cylinder_collision_detection.html#CylinderCollisionDetection.MultipleCylinders.get_next_points">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_next_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">information_matrix</span><span class="p">,</span> <span class="n">working_indices</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the next set of points to evaluate for collision.</span>
+
+<span class="sd">        This method advances the collision detection process by moving from the</span>
+<span class="sd">        last known safe points along each cylinder&#39;s axis direction by the last</span>
+<span class="sd">        computed safe distance.</span>
+
+<span class="sd">        Based on Propositions 1 and 2 from our SPM2024 paper.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        information_matrix : np.ndarray</span>
+<span class="sd">            Object-typed array storing per-cylinder data, including the history</span>
+<span class="sd">            of evaluated points, safe distances, and collision indices. It is</span>
+<span class="sd">            expected to follow the column layout described in the</span>
+<span class="sd">            :class:`CollisionInformation` wrapper.</span>
+<span class="sd">        working_indices : np.ndarray</span>
+<span class="sd">            One-dimensional array of integer indices identifying the cylinders</span>
+<span class="sd">            that are still under evaluation in the current iteration.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Array of shape ``(n, 3)`` containing the next points to be</span>
+<span class="sd">            evaluated. For each cylinder in ``working_indices``, the next point</span>
+<span class="sd">            is obtained by moving from the last evaluated point along the</span>
+<span class="sd">            cylinder&#39;s unit axis vector by the magnitude of the last safe</span>
+<span class="sd">            distance.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - For each cylinder, the last point and last safe distance are read</span>
+<span class="sd">          from ``information_matrix`` using ``working_indices``.</span>
+<span class="sd">        - The new point is computed as</span>
+
+<span class="sd">          .. math::</span>
+
+<span class="sd">             p_{\text{next}} = p_{\text{last}} + d_{\text{safe}} \, \hat{u},</span>
+
+<span class="sd">          where :math:`p_{\text{last}}` is the last evaluated point,</span>
+<span class="sd">          :math:`d_{\text{safe}}` is the last safe distance, and</span>
+<span class="sd">          :math:`\hat{u}` is the unit axis direction of the cylinder.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># from the lists of points in the cylinder, get only the last one for each considered cylinder</span>
+        <span class="n">list_of_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">information_matrix</span><span class="p">[</span><span class="n">working_indices</span><span class="p">,</span> <span class="n">index_of_list_of_points_in_cylinder</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">list_of_vectors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unitary_vectors</span><span class="p">[</span><span class="n">working_indices</span><span class="p">]</span>
+        <span class="n">list_of_safe_distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">information_matrix</span><span class="p">[</span><span class="n">working_indices</span><span class="p">,</span> <span class="n">index_of_list_of_safe_distances</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">list_of_points</span> <span class="o">+</span> <span class="n">list_of_safe_distances</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">*</span><span class="n">list_of_vectors</span></div>
+
+        
+
+<div class="viewcode-block" id="MultipleCylinders.collision_detection_no_gaps">
+<a class="viewcode-back" href="../api/cylinder_collision_detection.html#CylinderCollisionDetection.MultipleCylinders.collision_detection_no_gaps">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">collision_detection_no_gaps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Conducts an exhaustive collision detection process without any gaps, iteratively assessing each cylinder&#39;s </span>
+<span class="sd">        collision state until all cylinders are evaluated or a colliding cylinder is found.</span>
+
+<span class="sd">        This method initiates with the assumption that the collision state of each cylinder is unknown (&#39;?&#39;).</span>
+<span class="sd">        Collision detection is based on the our definitions and propositions. The method updates cylinder states iteratively.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple</span>
+<span class="sd">            A tuple containing:</span>
+<span class="sd">            - int: The number of iterations it took to resolve the collision states of all cylinders.</span>
+<span class="sd">            - np.ndarray: The updated information matrix detailing the current state of each cylinder, including whether </span>
+<span class="sd">                        it is colliding, non-colliding, or undetermined.</span>
+
+<span class="sd">        Information Matrix Structure:</span>
+<span class="sd">        -----------------------------</span>
+<span class="sd">        The information matrix contains several columns that store different types of data for each cylinder:</span>
+<span class="sd">            0. Collision State (&#39;?&#39;, True, False) - Initial unknown state &#39;?&#39;, True for colliding, False for non-colliding.</span>
+<span class="sd">            1. cylinder Index - Numeric index of the cylinder in the set.</span>
+<span class="sd">            2. cylinder Bottom - 3D coordinates of the bottom point of the cylinder.</span>
+<span class="sd">            3. cylinder Top - 3D coordinates of the top point of the cylinder.</span>
+<span class="sd">            4. List of Points - Dynamic list of points checked for collision along the cylinder.</span>
+<span class="sd">            5. List of Footpoints - Corresponding closest points on the mesh for each point checked.</span>
+<span class="sd">            6. List of Safe Distances - Computed safe distances for each point to determine if it is within a safe buffer.</span>
+<span class="sd">            7. Collision Indices - Dynamic list of collision results for each point checked.</span>
+<span class="sd">            8. List of Iterations - Records the iteration number when each point was checked.</span>
+
+<span class="sd">        Process:</span>
+<span class="sd">        --------</span>
+<span class="sd">        1. Initializes the information matrix with default values for all cylinders.</span>
+<span class="sd">        2. Iteratively computes the safe distances and checks for collisions using `compute_safe_spheres`.</span>
+<span class="sd">        3. Updates the information matrix with new data after each iteration, adjusting points based on their last known safe positions.</span>
+<span class="sd">        4. Continues until all cylinders are confirmed as non colliding or a collision is found.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">        -----</span>
+<span class="sd">        - The method dynamically adjusts the points of evaluation along the cylinder based on previously </span>
+<span class="sd">        calculated safe distances.</span>
+<span class="sd">        - It terminates when all cylinders are confirmed as non colliding or a collision is found.</span>
+<span class="sd">        - In the final result, only case where a cylinder&#39;s colliding state can be &#39;?&#39; is if there&#39;s a collision</span>
+<span class="sd">        in another cylinder and it has been detected.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># initialization of the information_matrix</span>
+        <span class="n">information_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="p">[</span><span class="s1">&#39;?&#39;</span><span class="p">,</span><span class="n">i</span> <span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bottoms</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">tops</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>  <span class="p">[],[],[],[],[]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tops</span><span class="p">))],</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">object</span><span class="p">)</span> 
+
+        <span class="n">iteracion</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">iteration</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">iteracion</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tops</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+        <span class="c1"># indices to work with</span>
+        <span class="n">working_indices</span> <span class="o">=</span> <span class="n">information_matrix</span><span class="p">[</span><span class="n">information_matrix</span><span class="p">[:,</span> <span class="n">index_of_is_cylinder_colliding</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;?&#39;</span><span class="p">][:,</span> <span class="n">index_of_cylinder_index</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> 
+
+        <span class="n">list_of_collision_index</span><span class="p">,</span> <span class="n">list_of_points</span><span class="p">,</span> <span class="n">list_of_footpoints</span><span class="p">,</span> <span class="n">list_of_safe_distances</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_safe_spheres</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tops</span><span class="p">,</span> <span class="n">working_indices</span><span class="p">)</span>
+        <span class="c1"># place the information in an iterable so that we can easilly change the info in the information matrix</span>
+        <span class="n">attributes</span> <span class="o">=</span> <span class="p">[</span><span class="n">list_of_points</span><span class="p">,</span> <span class="n">list_of_footpoints</span><span class="p">,</span> <span class="n">list_of_safe_distances</span><span class="p">,</span> <span class="n">list_of_collision_index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">iteration</span><span class="p">]</span>
+        <span class="c1"># modify the information</span>
+        <span class="k">for</span> <span class="n">index_of_attribute</span><span class="p">,</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">index_of_list_of_points_in_cylinder</span><span class="p">,</span> <span class="n">index_of_list_of_iterations</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">attributes</span><span class="p">):</span>
+            <span class="c1"># we iterate over the attributes we want to modify</span>
+            <span class="c1"># what we do is: in the specified indices, the attribute is changed to the refreshed list with the extra information added</span>
+            <span class="n">information_matrix</span><span class="p">[</span><span class="n">working_indices</span><span class="p">,</span> <span class="n">index_of_attribute</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">previous_list</span> <span class="o">+</span> <span class="p">[</span><span class="n">actual_value</span><span class="p">]</span> <span class="k">for</span> <span class="n">previous_list</span><span class="p">,</span> <span class="n">actual_value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">information_matrix</span><span class="p">[:,</span> <span class="n">index_of_attribute</span><span class="p">]</span> <span class="p">,</span> <span class="n">attribute</span><span class="p">)]</span>
+        <span class="c1"># set cylinders to colliding or noncolliding depending on the value of the first top</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]):</span>
+            <span class="n">information_matrix</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">list_of_collision_index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">==</span> <span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">index_of_is_cylinder_colliding</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+        
+        <span class="k">while</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">information_matrix</span><span class="p">[:,</span><span class="n">index_of_is_cylinder_colliding</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;?&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">information_matrix</span><span class="p">[:,</span><span class="n">index_of_is_cylinder_colliding</span><span class="p">]</span> <span class="o">!=</span> <span class="kc">True</span><span class="p">):</span>
+            <span class="c1"># hte loop iterates while there are cylinders whose collidingness has not been decided yet and there are no colliding cylinders found</span>
+            <span class="n">iteracion</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># indices to work with</span>
+            <span class="c1">#   they are selected to be those as not labeled as False yet. They need to be int.</span>
+            <span class="n">working_indices</span>      <span class="o">=</span> <span class="n">information_matrix</span><span class="p">[</span><span class="n">information_matrix</span><span class="p">[:,</span> <span class="n">index_of_is_cylinder_colliding</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;?&#39;</span><span class="p">][:,</span> <span class="n">index_of_cylinder_index</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> 
+            <span class="c1"># list_of_points_prev = self.get_next_points(information_matrix=information_matrix, working_indices=working_indices)</span>
+            <span class="n">list_of_points_prev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_points</span><span class="p">(</span><span class="n">information_matrix</span><span class="o">=</span><span class="n">information_matrix</span><span class="p">,</span> <span class="n">working_indices</span><span class="o">=</span><span class="n">working_indices</span><span class="p">)</span>
+            <span class="n">list_of_collision_index</span><span class="p">,</span> <span class="n">list_of_points</span><span class="p">,</span> <span class="n">list_of_footpoints</span><span class="p">,</span> <span class="n">list_of_safe_distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_safe_spheres</span><span class="p">(</span><span class="n">list_of_points_prev</span><span class="p">,</span> <span class="n">working_indices</span><span class="p">)</span>
+
+            <span class="c1"># first of all, set the ones with -1 to False</span>
+            <span class="n">list_of_collision_index</span> <span class="o">=</span> <span class="n">list_of_collision_index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">list_of_collision_index</span><span class="p">[</span><span class="n">list_of_collision_index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
+                <span class="n">information_matrix</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">working_indices</span><span class="p">)[</span><span class="n">list_of_collision_index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">index_of_is_cylinder_colliding</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            
+            <span class="k">if</span> <span class="n">list_of_collision_index</span><span class="p">[</span><span class="n">list_of_collision_index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
+                <span class="n">information_matrix</span><span class="p">[</span><span class="n">working_indices</span><span class="p">[</span><span class="n">list_of_collision_index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">],</span> <span class="n">index_of_is_cylinder_colliding</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            
+            <span class="c1"># add now the information to every index</span>
+            <span class="n">iteration</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">iteracion</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_of_points</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+            <span class="n">attributes</span> <span class="o">=</span> <span class="p">[</span><span class="n">list_of_points</span><span class="p">,</span> <span class="n">list_of_footpoints</span><span class="p">,</span> <span class="n">list_of_safe_distances</span><span class="p">,</span> <span class="n">list_of_collision_index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">iteration</span><span class="p">]</span>
+            <span class="c1"># modify the information</span>
+            <span class="k">for</span> <span class="n">index_of_attribute</span><span class="p">,</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">index_of_list_of_points_in_cylinder</span><span class="p">,</span> <span class="n">index_of_list_of_iterations</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">attributes</span><span class="p">):</span>
+                <span class="c1"># we iterate over the attributes we want to modify</span>
+                <span class="c1"># what we do is: in the specified indices, the attribute is changed to the refreshed list with the extra information added</span>
+                <span class="n">information_matrix</span><span class="p">[</span><span class="n">working_indices</span><span class="p">,</span> <span class="n">index_of_attribute</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">previous_list</span> <span class="o">+</span> <span class="p">[</span><span class="n">actual_value</span><span class="p">]</span> <span class="k">for</span> <span class="n">previous_list</span><span class="p">,</span> <span class="n">actual_value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">information_matrix</span><span class="p">[</span><span class="n">working_indices</span><span class="p">,</span> <span class="n">index_of_attribute</span><span class="p">]</span> <span class="p">,</span> <span class="n">attribute</span><span class="p">)]</span>
+            
+        <span class="n">collision_information</span> <span class="o">=</span> <span class="n">CollisionInformation</span><span class="p">(</span><span class="n">information_matrix</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">iteracion</span><span class="p">,</span> <span class="n">collision_information</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="MultipleCylinders.collision_detection_no_gaps_detect_all_cylinders">
+<a class="viewcode-back" href="../api/cylinder_collision_detection.html#CylinderCollisionDetection.MultipleCylinders.collision_detection_no_gaps_detect_all_cylinders">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">collision_detection_no_gaps_detect_all_cylinders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Conducts an exhaustive collision detection process without any gaps, iteratively assessing each cylinder&#39;s </span>
+<span class="sd">        collision state until all cylinders are evaluated.</span>
+
+<span class="sd">        This method initiates with the assumption that the collision state of each cylinder is unknown (&#39;?&#39;).</span>
+<span class="sd">        Collision detection is based on the our definitions and propositions. The method updates cylinder states</span>
+<span class="sd">        iteratively.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple</span>
+<span class="sd">            A tuple containing:</span>
+<span class="sd">            - int: The number of iterations it took to resolve the collision states of all cylinders.</span>
+<span class="sd">            - np.ndarray: The updated information matrix detailing the current state of each cylinder, including whether </span>
+<span class="sd">                        it is colliding, non-colliding, or undetermined.</span>
+
+<span class="sd">        Information Matrix Structure:</span>
+<span class="sd">        -----------------------------</span>
+<span class="sd">        The information matrix contains several columns that store different types of data for each cylinder:</span>
+<span class="sd">            0. Collision State (&#39;?&#39;, True, False) - Initial unknown state &#39;?&#39;, True for colliding, False for non-colliding.</span>
+<span class="sd">            1. cylinder Index - Numeric index of the cylinder in the set.</span>
+<span class="sd">            2. cylinder Bottom - 3D coordinates of the bottom point of the cylinder.</span>
+<span class="sd">            3. cylinder Top - 3D coordinates of the top point of the cylinder.</span>
+<span class="sd">            4. List of Points - Dynamic list of points checked for collision along the cylinder.</span>
+<span class="sd">            5. List of Footpoints - Corresponding closest points on the mesh for each point checked.</span>
+<span class="sd">            6. List of Safe Distances - Computed safe distances for each point to determine if it is within a safe buffer.</span>
+<span class="sd">            7. Collision Indices - Dynamic list of collision results for each point checked.</span>
+<span class="sd">            8. List of Iterations - Records the iteration number when each point was checked.</span>
+
+<span class="sd">        Process:</span>
+<span class="sd">        --------</span>
+<span class="sd">        1. Initializes the information matrix with default values for all cylinders.</span>
+<span class="sd">        2. Iteratively computes the safe distances and checks for collisions using `compute_safe_spheres`.</span>
+<span class="sd">        3. Updates the information matrix with new data after each iteration, adjusting points based on their last known safe positions.</span>
+<span class="sd">        4. Continues until all cylinders are labeled as (non)colliding.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">        -----</span>
+<span class="sd">        - The method dynamically adjusts the points of evaluation along the cylinder based on previously </span>
+<span class="sd">        calculated safe distances.</span>
+<span class="sd">        - It terminates when all cylinders are labeled as (non)colliding.</span>
+<span class="sd">        - In the final result, all cylinders should be &#39;True&#39; or &#39;False&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># initialization of the information_matrix</span>
+        <span class="n">information_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="p">[</span><span class="s1">&#39;?&#39;</span><span class="p">,</span><span class="n">i</span> <span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bottoms</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">tops</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>  <span class="p">[],[],[],[],[]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tops</span><span class="p">))],</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">object</span><span class="p">)</span> 
+
+        <span class="n">iteracion</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">iteration</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">iteracion</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tops</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+        <span class="c1"># indices to work with</span>
+        <span class="n">working_indices</span> <span class="o">=</span> <span class="n">information_matrix</span><span class="p">[</span><span class="n">information_matrix</span><span class="p">[:,</span> <span class="n">index_of_is_cylinder_colliding</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;?&#39;</span><span class="p">][:,</span> <span class="n">index_of_cylinder_index</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> 
+
+        <span class="n">list_of_collision_index</span><span class="p">,</span> <span class="n">list_of_points</span><span class="p">,</span> <span class="n">list_of_footpoints</span><span class="p">,</span> <span class="n">list_of_safe_distances</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_safe_spheres</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tops</span><span class="p">,</span> <span class="n">working_indices</span><span class="p">)</span>
+        <span class="c1"># place the information in an iterable so that we can easilly change the info in the information matrix</span>
+        <span class="n">attributes</span> <span class="o">=</span> <span class="p">[</span><span class="n">list_of_points</span><span class="p">,</span> <span class="n">list_of_footpoints</span><span class="p">,</span> <span class="n">list_of_safe_distances</span><span class="p">,</span> <span class="n">list_of_collision_index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">iteration</span><span class="p">]</span>
+        <span class="c1"># modify the information</span>
+        <span class="k">for</span> <span class="n">index_of_attribute</span><span class="p">,</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">index_of_list_of_points_in_cylinder</span><span class="p">,</span> <span class="n">index_of_list_of_iterations</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">attributes</span><span class="p">):</span>
+            <span class="c1"># we iterate over the attributes we want to modify</span>
+            <span class="c1"># what we do is: in the specified indices, the attribute is changed to the refreshed list with the extra information added</span>
+            <span class="n">information_matrix</span><span class="p">[</span><span class="n">working_indices</span><span class="p">,</span> <span class="n">index_of_attribute</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">previous_list</span> <span class="o">+</span> <span class="p">[</span><span class="n">actual_value</span><span class="p">]</span> <span class="k">for</span> <span class="n">previous_list</span><span class="p">,</span> <span class="n">actual_value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">information_matrix</span><span class="p">[:,</span> <span class="n">index_of_attribute</span><span class="p">]</span> <span class="p">,</span> <span class="n">attribute</span><span class="p">)]</span>
+        <span class="c1"># set cylinders to colliding or noncolliding depending on the value of the first top</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]):</span>
+            <span class="n">information_matrix</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">list_of_collision_index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">==</span> <span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">index_of_is_cylinder_colliding</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+        
+        <span class="k">while</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">information_matrix</span><span class="p">[:,</span><span class="n">index_of_is_cylinder_colliding</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;?&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">iteracion</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+            <span class="c1"># hte loop iterates while there are cylinders whose collidingness has not been decided yet and there are no colliding cylinders found</span>
+            <span class="n">iteracion</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># indices to work with</span>
+            <span class="c1">#   they are selected to be those as not labeled as False yet. They need to be int.</span>
+            <span class="n">working_indices</span>      <span class="o">=</span> <span class="n">information_matrix</span><span class="p">[</span><span class="n">information_matrix</span><span class="p">[:,</span> <span class="n">index_of_is_cylinder_colliding</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;?&#39;</span><span class="p">][:,</span> <span class="n">index_of_cylinder_index</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> 
+            <span class="c1"># list_of_points_prev = self.get_next_points(information_matrix=information_matrix, working_indices=working_indices)</span>
+            <span class="n">list_of_points_prev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_points</span><span class="p">(</span><span class="n">information_matrix</span><span class="o">=</span><span class="n">information_matrix</span><span class="p">,</span> <span class="n">working_indices</span><span class="o">=</span><span class="n">working_indices</span><span class="p">)</span>
+            <span class="n">list_of_collision_index</span><span class="p">,</span> <span class="n">list_of_points</span><span class="p">,</span> <span class="n">list_of_footpoints</span><span class="p">,</span> <span class="n">list_of_safe_distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_safe_spheres</span><span class="p">(</span><span class="n">list_of_points_prev</span><span class="p">,</span> <span class="n">working_indices</span><span class="p">)</span>
+
+            <span class="c1"># first of all, set the ones with -1 to False</span>
+            <span class="n">list_of_collision_index</span> <span class="o">=</span> <span class="n">list_of_collision_index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">list_of_collision_index</span><span class="p">[</span><span class="n">list_of_collision_index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
+                <span class="n">information_matrix</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">working_indices</span><span class="p">)[</span><span class="n">list_of_collision_index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">index_of_is_cylinder_colliding</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            
+            <span class="k">if</span> <span class="n">list_of_collision_index</span><span class="p">[</span><span class="n">list_of_collision_index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
+                <span class="n">information_matrix</span><span class="p">[</span><span class="n">working_indices</span><span class="p">[</span><span class="n">list_of_collision_index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">],</span> <span class="n">index_of_is_cylinder_colliding</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            
+            <span class="c1"># add now the information to every index</span>
+            <span class="n">iteration</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">iteracion</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_of_points</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+            <span class="n">attributes</span> <span class="o">=</span> <span class="p">[</span><span class="n">list_of_points</span><span class="p">,</span> <span class="n">list_of_footpoints</span><span class="p">,</span> <span class="n">list_of_safe_distances</span><span class="p">,</span> <span class="n">list_of_collision_index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">iteration</span><span class="p">]</span>
+            <span class="c1"># modify the information</span>
+            <span class="k">for</span> <span class="n">index_of_attribute</span><span class="p">,</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">index_of_list_of_points_in_cylinder</span><span class="p">,</span> <span class="n">index_of_list_of_iterations</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">attributes</span><span class="p">):</span>
+                <span class="c1"># we iterate over the attributes we want to modify</span>
+                <span class="c1"># what we do is: in the specified indices, the attribute is changed to the refreshed list with the extra information added</span>
+                <span class="n">information_matrix</span><span class="p">[</span><span class="n">working_indices</span><span class="p">,</span> <span class="n">index_of_attribute</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">previous_list</span> <span class="o">+</span> <span class="p">[</span><span class="n">actual_value</span><span class="p">]</span> <span class="k">for</span> <span class="n">previous_list</span><span class="p">,</span> <span class="n">actual_value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">information_matrix</span><span class="p">[</span><span class="n">working_indices</span><span class="p">,</span> <span class="n">index_of_attribute</span><span class="p">]</span> <span class="p">,</span> <span class="n">attribute</span><span class="p">)]</span>
+        <span class="c1"># if there is still a cylinder labeled as &#39;?&#39; after all the evaluations, </span>
+        <span class="c1"># probably the position is not safe enough so we label it as colliding</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;?&#39;</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">information_matrix</span><span class="p">])</span>
+        <span class="c1"># Replace &#39;?&#39; with True in the first element of the selected rows</span>
+        <span class="n">information_matrix</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">collision_information</span> <span class="o">=</span> <span class="n">CollisionInformation</span><span class="p">(</span><span class="n">information_matrix</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">iteracion</span><span class="p">,</span> <span class="n">collision_information</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">MillingAround</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html#millingaround">MillingAround</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, J. Zaragoza-Chichell.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.0.2</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Overview &#8212; MillingAround 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=c058f7c8" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=2709fde1"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="api/index.html" />
+    <link rel="prev" title="MillingAround documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h1>
+</section>
+<section id="millingaround">
+<h1>MillingAround<a class="headerlink" href="#millingaround" title="Link to this heading">¶</a></h1>
+<p>Python utilities for studying tool/workpiece interactions in point milling. The
+codebase collects the collision-detection routines from the paper <em>Collision-
+free Tool Motion Planning for 5-Axis CNC Machining with Toroidal Cutters</em>
+(<a class="reference external" href="https://www.sciencedirect.com/science/article/abs/pii/S0010448524000526?via%3Dihub">https://www.sciencedirect.com/science/article/abs/pii/S0010448524000526?via%3Dihub</a>, <a class="reference external" href="https://bird.bcamath.org/handle/20.500.11824/1842">https://bird.bcamath.org/handle/20.500.11824/1842</a>)
+covering cylinders versus triangle meshes, and the tooling used to model
+toroidal/flat-end cutters moving over bicubic Bézier patches. Jupyter notebooks
+and precomputed media illustrate the workflows.</p>
+<section id="repository-layout">
+<h2>Repository Layout<a class="headerlink" href="#repository-layout" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">CylinderCollisionDetection.py</span></code> – collision detection between multiple</dt><dd><p>cylinders and a triangle mesh using Open3D raycasting. Provides
+<code class="docutils literal notranslate"><span class="pre">MultipleCylinders</span></code> plus the <code class="docutils literal notranslate"><span class="pre">CollisionInformation</span></code> wrapper returned by
+<code class="docutils literal notranslate"><span class="pre">collision_detection_no_gaps</span></code> and
+<code class="docutils literal notranslate"><span class="pre">collision_detection_no_gaps_detect_all_cylinders</span></code>.</p>
+</dd>
+</dl>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">point_milling_backend.py</span></code> – low-level geometry for point milling.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">point_milling_frontend.py</span></code> – user-facing helpers.</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">MeshGenerator.py</span></code> – trimesh-based primitives (cylinders, cones, pipes,</dt><dd><p>disks, control nets, arrows) plus helpers to export meshes and build meshes
+from the backend surface.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Notebooks: <code class="docutils literal notranslate"><span class="pre">example_CylinderCollisionDetection.ipynb</span></code>,</dt><dd><p><code class="docutils literal notranslate"><span class="pre">examples_point_milling_frontend.ipynb</span></code>, <code class="docutils literal notranslate"><span class="pre">generate_frames.ipynb</span></code>
+demonstrate the collision routines, milling envelope construction, and frame
+generation.</p>
+</dd>
+</dl>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">video_stuff/</span></code> – generated media (STLs, PNGs, MP4) used in the demos.</p></li>
+</ul>
+</section>
+<section id="animation">
+<h2>Animation<a class="headerlink" href="#animation" title="Link to this heading">¶</a></h2>
+<p>Animation of the collision-detection algorithm. A translucent cylinder moves
+over the metal surface: starting at the top of the medial axis, the first
+footpoint is computed (cyan) and the first safe ball is constructed (green);
+the process then iterates from the boundary of the safe ball. It stops when a
+footpoint lies below the cutting plane (black circle), finalizing that cylinder.</p>
+<img alt="Collision detection animation" src="_images/collision_detection.gif" />
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h2>
+<p>For a browsable version of the API docs, visit
+<a class="reference external" href="https://juanZaragozaChichell.github.io/MillingAround/">https://juanZaragozaChichell.github.io/MillingAround/</a> .</p>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
+<p>Everything has been tested on a MacBook Pro with an Apple M1 Pro chip running
+Python 3.11.7. To replicate the environment, run the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="n">create</span> <span class="o">-</span><span class="n">f</span> <span class="n">environment</span><span class="o">.</span><span class="n">yml</span>
+<span class="n">conda</span> <span class="n">activate</span> <span class="n">millingaround</span>
+</pre></div>
+</div>
+<p>For examples of use, refer to the notebooks listed above.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">MillingAround</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#millingaround">MillingAround</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#repository-layout">Repository Layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#animation">Animation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">MillingAround documentation</a></li>
+      <li>Next: <a href="api/index.html" title="next chapter">API Reference</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, J. Zaragoza-Chichell.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.0.2</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/overview.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
