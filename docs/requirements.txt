@@ -1,0 +1,9 @@
+sphinx==8.0.2
+alabaster
+numpy==1.26.4
+scipy==1.11.4
+open3d==0.18.0
+trimesh==4.4.1
+plotly==5.22.0
+scikit-spatial==7.0.0
+matplotlib==3.8.4

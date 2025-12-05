@@ -43,7 +43,8 @@ footpoint lies below the cutting plane (black circle), finalizing that cylinder.
 Documentation
 -------------
 
-For a browsable version of the API docs, open ``docs/build/api/index.html``.
+For a browsable version of the API docs, visit
+https://juanZaragozaChichell.github.io/MillingAround/ .
 
 Installation
 ------------

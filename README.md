@@ -15,7 +15,7 @@ Animation of the collision-detection algorithm. A translucent cylinder moves ove
 ![Collision detection animation](video_stuff/collision_detection.gif)
 
 ## Documentation
-For a browsable version of the API docs, open `docs/build/api/index.html`.
+For a browsable version of the API docs, visit https://juanZaragozaChichell.github.io/MillingAround/ .
 
 ## Installation
 Everything has been tested on a MacBook Pro with an Apple M1 Pro chip running Python 3.11.7.
