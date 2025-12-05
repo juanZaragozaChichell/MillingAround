@@ -29,3 +29,5 @@ dist/
 
 # Sphinx build output
 docs/build/
+video_stuff/frames.txt
+video_stuff/palette.png

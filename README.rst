@@ -26,6 +26,12 @@ Repository Layout
    generation.
 * ``video_stuff/`` – generated media (STLs, PNGs, MP4) used in the demos.
 
+Animation preview
+-----------------
+
+.. image:: video_stuff/collision_detection.gif
+   :alt: Collision detection animation
+
 Documentation
 -------------
 

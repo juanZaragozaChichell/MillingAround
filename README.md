@@ -10,6 +10,9 @@ Python utilities for studying tool/workpiece interactions in point milling. The 
 - Notebooks: `example_CylinderCollisionDetection.ipynb`, `examples_point_milling_frontend.ipynb`, `generate_frames.ipynb` demonstrate the collision routines, milling envelope construction, and frame generation.
 - `video_stuff/` – generated media (STLs, PNGs, MP4) used in the demos.
 
+## Animation preview
+![Collision detection animation](video_stuff/collision_detection.gif)
+
 ## Documentation
 For a browsable version of the API docs, open `docs/build/api/index.html`.
 
