@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Juan Zaragoza | Personal Site</title>
+  <style>
+    :root {
+      --bg: #0f1720;
+      --card: #152130;
+      --accent: #f4a261;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background: radial-gradient(circle at 20% 20%, #1f2937, #0f1720 40%),
+                  radial-gradient(circle at 80% 0%, #1b2635, #0f1720 50%),
+                  #0f1720;
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 64px 24px 32px;
+      text-align: center;
+      position: relative;
+    }
+    header h1 { margin: 0 0 12px; font-size: 2.5rem; letter-spacing: 0.5px; }
+    header p { margin: 0; color: var(--muted); font-size: 1.05rem; }
+    nav {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    nav a {
+      background: rgba(244,162,97,0.14);
+      border: 1px solid rgba(244,162,97,0.35);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    nav a:hover {
+      background: rgba(244,162,97,0.22);
+      border-color: var(--accent);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 24px 48px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    }
+    .card h2 { margin-top: 0; font-size: 1.25rem; letter-spacing: 0.3px; }
+    .pill {
+      display: inline-block;
+      padding: 6px 10px;
+      margin: 4px 6px 4px 0;
+      border-radius: 999px;
+      background: rgba(244,162,97,0.12);
+      color: var(--accent);
+      font-size: 0.85rem;
+    }
+    ul { padding-left: 18px; margin: 12px 0; color: var(--muted); }
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .links a { margin: 0 10px; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#publications">Publications</a>
+      <a href="#awards">Awards</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <h1>Juan Zaragoza</h1>
+    <p>Computational geometry, machining research, and tooling for CNC workflows.</p>
+    <div class="links" style="margin-top:14px;">
+      <a href="mailto:juan@example.com">Email</a>
+      <a href="https://github.com/juanZaragozaChichell" target="_blank" rel="noreferrer">GitHub</a>
+      <a href="https://www.linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="card" id="about">
+      <h2>About</h2>
+      <p>I work on collision detection, toolpath planning, and geometric algorithms for 5-axis CNC milling. This site links to ongoing projects, papers, and code that support safer and more efficient machining workflows.</p>
+      <div>
+        <span class="pill">Python</span>
+        <span class="pill">Open3D</span>
+        <span class="pill">Trimesh</span>
+        <span class="pill">Sphinx Docs</span>
+      </div>
+    </section>
+
+    <section class="card" id="publications">
+      <h2>Publications</h2>
+      <ul>
+        <li><strong>CAD 2025</strong> — <a href="https://www.sciencedirect.com/science/article/pii/S0010448525001137" target="_blank" rel="noreferrer">Publisher link</a></li>
+        <li><strong>CAD 2025</strong> — <a href="https://www.sciencedirect.com/science/article/pii/S0010448525001125" target="_blank" rel="noreferrer">Publisher link</a></li>
+        <li><strong>Collision-free Tool Motion Planning for 5-Axis CNC Machining with Toroidal Cutters</strong> — CAD 2024. <a href="https://www.sciencedirect.com/science/article/abs/pii/S0010448524000526?via%3Dihub" target="_blank" rel="noreferrer">Publisher link</a></li>
+      </ul>
+    </section>
+
+    <section class="card" id="awards">
+      <h2>Prizes & Awards</h2>
+      <ul>
+        <li>Outstanding Research in Computational Geometry — (add year/details).</li>
+        <li>Academic excellence recognition — (add year/details).</li>
+      </ul>
+    </section>
+
+    <section class="card" id="contact">
+      <h2>Contact</h2>
+      <p>Feel free to reach out for collaborations or questions about collision detection and machining software.</p>
+      <ul>
+        <li>Email: <a href="mailto:juan@example.com">juan@example.com</a></li>
+        <li>GitHub: <a href="https://github.com/juanZaragozaChichell">github.com/juanZaragozaChichell</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    Built with plain HTML/CSS. Hosted on GitHub Pages.
+  </footer>
+</body>
+</html>

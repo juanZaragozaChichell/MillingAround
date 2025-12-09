@@ -15,7 +15,17 @@ from plotly.colors import sample_colorscale, get_colorscale, unlabel_rgb
 import plotly.graph_objects as go
 
 class Arrow:
-    r"""Composite arrow mesh built from a cylinder shaft and cone tip."""
+    r"""Composite arrow mesh built from a cylinder shaft and cone tip.
+
+    Methods
+    -------
+    mesh()
+        Build the arrow mesh by concatenating shaft and tip.
+    mesh_data()
+        Return the vertices and faces composing the arrow.
+    export_mesh(name)
+        Export the arrow mesh to disk.
+    """
 
     def __init__(self, R1, R2, bottom, top, t):
         r"""Initialize the arrow definition.
@@ -77,7 +87,19 @@ class Arrow:
         mesh.export(name)
 
 class Cone:
-    r"""Triangulated cone defined by base center, apex, and radius."""
+    r"""Triangulated cone defined by base center, apex, and radius.
+
+    Methods
+    -------
+    pointcloud()
+        Sample circular layers along the cone axis.
+    mesh_data()
+        Return vertices and triangular faces describing the cone.
+    mesh(caps=False)
+        Build a :class:`trimesh.Trimesh` of the cone, optionally capped.
+    export_mesh(name, caps=False)
+        Export the cone mesh to disk.
+    """
 
     def __init__(self, R, bottom, top):
         r"""Store cone geometry.
@@ -189,7 +211,13 @@ class Cone:
         mesh.export(name)
 
 class Sphere:
-    r"""Thin wrapper around :class:`trimesh.primitives.Sphere`."""
+    r"""Thin wrapper around :class:`trimesh.primitives.Sphere`.
+
+    Methods
+    -------
+    export_mesh(name)
+        Export the sphere primitive.
+    """
 
     def __init__(self, center, R):
         r"""Instantiate a sphere.
@@ -216,7 +244,23 @@ class Sphere:
         self.mesh_object.export(name)
 
 class ControlNet:
-    r"""Utility to visualize Bezier control nets via spheres and cylinders."""
+    r"""Utility to visualize Bezier control nets via spheres and cylinders.
+
+    Methods
+    -------
+    control_points_fun()
+        Return the flattened control net as ``(nrows*ncols, 3)`` array.
+    spheres_mesh(R)
+        Concatenate :class:`Sphere` primitives centered at control points.
+    edges(R)
+        Create edge cylinders connecting adjacent control points.
+    _mesh(spheres_radius, edges_radius)
+        Combine spheres and cylinders into a single mesh.
+    export_mesh_separately(names, spheres_radius, edges_radius)
+        Export spheres and edges meshes independently.
+    export_mesh(name, spheres_radius, edges_radius)
+        Export combined control net to disk.
+    """
 
     def __init__(self, mat):
         r"""Store control heights and precompute cartesian points.
@@ -346,7 +390,17 @@ class ControlNet:
         mesh.export(name)
 
 class Surface:
-    r"""Convenience wrapper that exposes :class:`point_milling_backend.Surface`."""
+    r"""Convenience wrapper that exposes :class:`point_milling_backend.Surface`.
+
+    Methods
+    -------
+    generate_mesh_data()
+        Return vertices, faces and normals from the backend surface.
+    _mesh()
+        Build a :class:`trimesh.Trimesh` instance from backend data.
+    export_mesh(name)
+        Export the baked surface mesh to disk.
+    """
 
     def __init__(self, matrix):
         r"""Create a meshable surface.
@@ -393,7 +447,17 @@ class Surface:
         self.mesh.export(name)
 
 class Disk:
-    r"""Planar disk triangulation defined by center, normal, and radius."""
+    r"""Planar disk triangulation defined by center, normal, and radius.
+
+    Methods
+    -------
+    pointcloud(num_points=50)
+        Return circle samples plus center vertex.
+    mesh_data(num_points=50)
+        Generate vertices and fan faces for the disk.
+    export_mesh(name)
+        Export the disk mesh to disk.
+    """
 
     def __init__(self, center,normal_vector, R):
         r"""Store disk definition.
@@ -481,7 +545,25 @@ class Disk:
         mesh.export(name)
 
 class PipeSurface:
-    r"""Generate tubular meshes around parametric curves."""
+    r"""Generate tubular meshes around parametric curves.
+
+    Methods
+    -------
+    tangent_vector(t)
+        Approximate curve tangent at parameter ``t``.
+    orthonormal_frame(t)
+        Return Frenet-like frame ``(T, N, B)`` at ``t``.
+    circle(t, resolution=50)
+        Return a circle of radius ``R`` orthogonal to the curve at ``t``.
+    pointcloud(resolution_circle=50, resolution_time=100)
+        Sample the full pipe surface as a structured array.
+    mesh_data(resolution_circle=50, resolution_time=100)
+        Return vertices and faces describing the tube surface.
+    mesh(caps=False, resolution_circle=50, resolution_time=100)
+        Build the :class:`trimesh.Trimesh` pipe, optionally capping the ends.
+    export_mesh(name, caps=False, resolution_circle=50, resolution_time=100)
+        Export a discretized pipe to ``name``.
+    """
 
     def __init__(self, curve, Range, R):
         r"""Store the swept pipe definition.
@@ -674,6 +756,19 @@ class Cylinder:
         Cylinder radius.
     sections : int
         Radial tessellation used for the procedural mesh.
+
+    Methods
+    -------
+    mesh()
+        Return a :class:`trimesh.Trimesh` oriented between ``bottom`` and ``top``.
+    mesh_data()
+        Return the vertices and faces of the procedurally generated cylinder.
+    triangulation(angle_resolution=128, height_resolution=64, caps=False, cap_resolution=None)
+        Return a Delaunay triangulation of the cylinder surface.
+    delaunay_mesh(angle_resolution=128, height_resolution=64, caps=False, cap_resolution=None)
+        Return a :class:`trimesh.Trimesh` generated via Delaunay triangulation.
+    export_mesh(name)
+        Export the procedurally generated cylinder.
     """
 
     def __init__(self, bottom, top, radius, sections=64):
@@ -708,6 +803,92 @@ class Cylinder:
         mesh = self.mesh()
         return mesh.vertices, mesh.faces
 
+    def triangulation(self, angle_resolution=128, height_resolution=64, caps=False, cap_resolution=None):
+        r"""Return a Delaunay triangulation of the cylinder surface.
+
+        Parameters
+        ----------
+        angle_resolution : int, optional
+            Number of samples around the circumference (must be >= 3).
+        height_resolution : int, optional
+            Number of samples along the axis (must be >= 2).
+        caps : bool, optional
+            When ``True`` add top and bottom disks to close the mesh.
+        cap_resolution : int, optional
+            Samples for the cap fans; defaults to ``angle_resolution``.
+
+        Returns
+        -------
+        tuple[np.ndarray, np.ndarray]
+            Vertices and triangular faces describing the mesh.
+        """
+        if not isinstance(angle_resolution, int) or angle_resolution < 3:
+            raise ValueError("angle_resolution must be an integer greater than or equal to 3")
+        if not isinstance(height_resolution, int) or height_resolution < 2:
+            raise ValueError("height_resolution must be an integer greater than or equal to 2")
+        if cap_resolution is None:
+            cap_resolution = angle_resolution
+        if not isinstance(cap_resolution, int) or cap_resolution < 3:
+            raise ValueError("cap_resolution must be an integer greater than or equal to 3")
+
+        axis_length = np.linalg.norm(self.axis)
+        if axis_length == 0:
+            raise ValueError("Cylinder axis has zero length")
+        axis_dir = self.axis / axis_length
+        if np.allclose(axis_dir, np.array([0, 0, 1])):
+            u = np.array([1, 0, 0])
+        else:
+            u = np.array([-axis_dir[1], axis_dir[0], 0])
+            u = u / np.linalg.norm(u)
+        v = np.cross(axis_dir, u)
+
+        angles = np.linspace(0, 2 * np.pi, angle_resolution, endpoint=False)
+        heights = np.linspace(0.0, 1.0, height_resolution)
+        angle_grid, height_grid = np.meshgrid(angles, heights)
+        params = np.column_stack([angle_grid.ravel(), height_grid.ravel()])
+
+        delaunay = Delaunay(params)
+        faces = delaunay.simplices.astype(int)
+
+        seam_faces = []
+        for h_idx in range(height_resolution - 1):
+            base = h_idx * angle_resolution
+            next_base = (h_idx + 1) * angle_resolution
+            last = base + angle_resolution - 1
+            next_last = next_base + angle_resolution - 1
+            seam_faces.append([last, base, next_last])
+            seam_faces.append([base, next_base, next_last])
+        if seam_faces:
+            faces = np.vstack([faces, np.array(seam_faces, dtype=int)])
+
+        center_grid = self.bottom + height_grid[..., None] * self.axis
+        offsets = self.radius * (
+            np.cos(angle_grid)[..., None] * u + np.sin(angle_grid)[..., None] * v
+        )
+        vertices = (center_grid + offsets).reshape(-1, 3)
+
+        if caps:
+            bottom_vertices, bottom_faces = Disk(center=self.bottom, normal_vector=-axis_dir, R=self.radius).mesh_data(num_points=cap_resolution)
+            top_vertices, top_faces = Disk(center=self.top, normal_vector=axis_dir, R=self.radius).mesh_data(num_points=cap_resolution)
+
+            bottom_faces = np.array(bottom_faces, dtype=int) + len(vertices)
+            top_faces = np.array(top_faces, dtype=int) + len(vertices) + len(bottom_vertices)
+
+            vertices = np.vstack([vertices, bottom_vertices, top_vertices])
+            faces = np.vstack([faces, bottom_faces, top_faces])
+
+        return vertices, faces
+
+    def delaunay_mesh(self, angle_resolution=128, height_resolution=64, caps=False, cap_resolution=None):
+        r"""Return a :class:`trimesh.Trimesh` generated via Delaunay triangulation."""
+        vertices, faces = self.triangulation(
+            angle_resolution=angle_resolution,
+            height_resolution=height_resolution,
+            caps=caps,
+            cap_resolution=cap_resolution,
+        )
+        return trimesh.Trimesh(vertices=vertices, faces=faces)
+
     def export_mesh(self, name):
         r"""Export the procedurally generated cylinder.
 
@@ -719,7 +900,21 @@ class Cylinder:
         self.mesh().export(name)
 
 class RuledSurface:
-    r"""Interpolate between two parametric curves to form a ruled surface."""
+    r"""Interpolate between two parametric curves to form a ruled surface.
+
+    Methods
+    -------
+    point(s, t)
+        Evaluate the ruled surface at ``s`` and ``t``.
+    pointcloud(s_resolution=100, t_resolution=100)
+        Return a structured grid sampling the ruled surface.
+    mesh_data(s_resolution=100, t_resolution=100)
+        Return vertices and faces describing the ruled surface.
+    mesh(s_resolution=100, t_resolution=100)
+        Build the :class:`trimesh.Trimesh` for the ruled surface.
+    export_mesh(name, s_resolution=100, t_resolution=100)
+        Export the ruled surface mesh to ``name``.
+    """
 
     def __init__(self, curve1, curve2):
         r"""Store the bounding curves."""
@@ -819,7 +1014,21 @@ class RuledSurface:
         mesh.export(name)
 
 class CircleEnvelope:
-    r"""Envelope surface generated by sweeping circles along a path."""
+    r"""Envelope surface generated by sweeping circles along a path.
+
+    Methods
+    -------
+    axis_normalized()
+        Return normalized axis vectors for each sample.
+    triangulation()
+        Triangulate the parameter space spanned by angle and time.
+    pointcloud(resolution_circle=None)
+        Return the sampled envelope points.
+    mesh(resolution_circle=None)
+        Build a :class:`trimesh.Trimesh` envelope.
+    export_mesh(name, resolution_circle=None)
+        Export the envelope mesh to ``name``.
+    """
 
     def __init__(self, contact_points, centers,axis, R, angle_resolution = 100):
         r"""Store the envelope sample data."""
@@ -915,7 +1124,19 @@ class CircleEnvelope:
         mesh.export(name)
 
 class Heatmap:
-    r"""Attach scalar data to meshes and visualize/export them."""
+    r"""Attach scalar data to meshes and visualize/export them.
+
+    Methods
+    -------
+    scalars_to_colors()
+        Convert scalar field to RGBA colors using the configured colorscale.
+    _mesh_with_colors()
+        Return a copy of the mesh decorated with per-vertex colors.
+    export_mesh(name)
+        Export the colored mesh to ``name`` (PLY enforced).
+    plotly_figure(showlegend=True, name='Heatmap')
+        Create a Plotly figure visualizing the colored surface.
+    """
 
     def __init__(self, mesh, array_of_scalars, upper_bound, lower_bound,  colorscale = 'turbo_r'):
         r"""Store data bounds and precompute vertex colors.
@@ -1051,7 +1272,15 @@ class Heatmap:
         return fig
 
 class Torus:
-    r"""Procedurally create a torus oriented along an arbitrary axis."""
+    r"""Procedurally create a torus oriented along an arbitrary axis.
+
+    Methods
+    -------
+    mesh()
+        Build the rotated torus as a :class:`trimesh.Trimesh`.
+    export_mesh(name)
+        Export the torus mesh to disk.
+    """
 
     def __init__(self, center, axis, R_major, R_minor):
         r"""Store the torus parameters."""

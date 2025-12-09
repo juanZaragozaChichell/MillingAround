@@ -1,33 +1,7 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.so
-
-# Jupyter
-.ipynb_checkpoints/
-
-# Environments
-.env
-.venv
-venv/
-env/
-.conda/
-
 # macOS
 .DS_Store
 
-# Editor settings
-.vscode/
-.idea/
-
-# Distribution / packaging
-build/
+# Node / builds (if added later)
 dist/
-*.egg-info/
-
-# Sphinx build output
-docs/build/
-video_stuff/frames.txt
-video_stuff/palette.png
+build/
+node_modules/
