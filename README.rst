@@ -4,7 +4,7 @@ MillingAround
 Python utilities for studying tool/workpiece interactions in point milling. The
 codebase collects the collision-detection routines from the paper *Collision-
 free Tool Motion Planning for 5-Axis CNC Machining with Toroidal Cutters*
-(https://www.sciencedirect.com/science/article/abs/pii/S0010448524000526?via%3Dihub, https://bird.bcamath.org/handle/20.500.11824/1842)
+(https://doi.org/10.1016/j.cad.2024.103725, https://bird.bcamath.org/handle/20.500.11824/1842)
 covering cylinders versus triangle meshes, and the tooling used to model
 toroidal/flat-end cutters moving over bicubic Bézier patches. Jupyter notebooks
 and precomputed media illustrate the workflows.
@@ -37,7 +37,7 @@ footpoint is computed (cyan) and the first safe ball is constructed (green);
 the process then iterates from the boundary of the safe ball. It stops when a
 footpoint lies below the cutting plane (black circle), finalizing that cylinder.
 
-.. image:: ../../video_stuff/collision_detection.gif
+.. image:: https://raw.githubusercontent.com/juanZaragozaChichell/MillingAround/main/video_stuff/collision_detection.gif
    :alt: Collision detection animation
 
 Documentation
@@ -45,6 +45,37 @@ Documentation
 
 For a browsable version of the API docs, visit
 https://juanZaragozaChichell.github.io/MillingAround/ .
+
+Cite Us
+-------
+
+If you use the algorithms or collision-detection method in this repository,
+please cite the paper:
+
+.. code-block:: bibtex
+
+   @article{zaragozachichell2024collisionfree,
+     title = {Collision-free Tool Motion Planning for 5-Axis CNC Machining with Toroidal Cutters},
+     author = {Zaragoza Chichell, Juan and Re{\v{c}}kov{\'a}, Alena and Bizzarri, Michal and Barto{\v{n}}, Michael},
+     journal = {Computer-Aided Design},
+     volume = {173},
+     pages = {103725},
+     year = {2024},
+     doi = {10.1016/j.cad.2024.103725},
+     url = {https://doi.org/10.1016/j.cad.2024.103725}
+   }
+
+If you use the repository or software directly, please also cite:
+
+.. code-block:: bibtex
+
+   @misc{zaragozachichell2026millingaround,
+     title = {MillingAround: Python Utilities for Point Milling and Collision Detection},
+     author = {Zaragoza Chichell, Juan},
+     year = {2026},
+     url = {https://github.com/juanZaragozaChichell/MillingAround},
+     note = {Software repository}
+   }
 
 Installation
 ------------

@@ -17,12 +17,41 @@ Animation of the collision-detection algorithm. A translucent cylinder moves ove
 ## Documentation
 For a browsable version of the API docs, visit https://juanZaragozaChichell.github.io/MillingAround/ .
 
+## Cite Us
+If you use the algorithms or collision-detection method in this repository,
+please cite the paper:
+
+```bibtex
+@article{zaragozachichell2024collisionfree,
+  title = {Collision-free Tool Motion Planning for 5-Axis CNC Machining with Toroidal Cutters},
+  author = {Zaragoza Chichell, Juan and Re{\v{c}}kov{\'a}, Alena and Bizzarri, Michal and Barto{\v{n}}, Michael},
+  journal = {Computer-Aided Design},
+  volume = {173},
+  pages = {103725},
+  year = {2024},
+  doi = {10.1016/j.cad.2024.103725},
+  url = {https://doi.org/10.1016/j.cad.2024.103725}
+}
+```
+
+If you use the repository or software directly, please also cite:
+
+```bibtex
+@misc{zaragozachichell2026millingaround,
+  title = {MillingAround: Python Utilities for Point Milling and Collision Detection},
+  author = {Zaragoza Chichell, Juan},
+  year = {2026},
+  url = {https://github.com/juanZaragozaChichell/MillingAround},
+  note = {Software repository}
+}
+```
+
 ## Installation
 Everything has been tested on a MacBook Pro with an Apple M1 Pro chip running Python 3.11.7.
-To replicate the envoronment, run the following:
+To replicate the environment, run the following:
    ```bash
    conda env create -f environment.yml
    conda activate millingaround
    ```
 
-For examples of use, refer yourself to the notebooks.
+For examples of use, refer to the notebooks listed above.

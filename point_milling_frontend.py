@@ -45,9 +45,8 @@ def fit_bicubic_bezier_height(u_vals, v_vals, z_vals):
     Returns
     -------
     c : 2D NumPy array of shape (4,4)
-        The 16 fitted scalar coefficients c_{i,j}.
-        So the fitted surface is:
-            z = sum_{i=0..3} sum_{j=0..3} c[i,j]*B_i(u)*B_j(v).
+        The 16 fitted scalar coefficients ``c[i, j]`` defining
+        ``z = sum_{i=0..3} sum_{j=0..3} c[i,j] * B_i(u) * B_j(v)``.
 
     P : np.ndarray of shape (4, 4, 3)
         Control net points ``(i/3, j/3, c[i, j])`` composing the bicubic patch.
@@ -319,11 +318,6 @@ class MachiningParameters:
         Offset distance (second torus radius) applied when generating the offset surface.
     mat_Q : np.ndarray
         ``4x4`` matrix describing the quadric surface that ``pmb.Surface`` evaluates.
-    matrices : np.ndarray
-        Stack of three ``4x4`` matrices used respectively for the G-function, ``phi`` rotation, and ``theta`` tilt.
-    number_of_paths : int
-        Requested number of level sets sampled from the G-function. Multiple components can increase
-        the actual number of contact curves.
     h : float
         Safety margin applied when computing minimum/maximum values of ``G`` to avoid degenerate level sets.
     surfaces_resolution : int
@@ -335,20 +329,6 @@ class MachiningParameters:
     n_shanks : int
         Default number of shank samples evaluated along each envelope.
 
-    Methods
-    -------
-    triangulate(...)
-        Return vertices, connectivity, and normals for the surface or its offset.
-    G_level_sets()
-        Sample consistently oriented level sets from the current ``G_function``.
-    uv_curves_parametrized()
-        Convert the level-set curves into cubic spline parametrizations for ``u`` and ``v``.
-    concatenated_envelopes_fun(...)
-        Discretize every envelope and merge them into a single mesh, with several trimming options.
-    discrete_shanks_vectorized(...)
-        Evaluate shank positions across all envelopes in a vectorized fashion.
-    error_measure_per_vertex()
-        Raycast surface normals against the envelopes to obtain per-vertex machining error.
     """
 
     def __init__(self, R, m, mat_Q, matrices,
@@ -667,14 +647,14 @@ class MachiningParameters:
 
         This routine samples ``n_shanks`` for each envelope, calls :meth:`pmb.Envelope.shank_at_t` in a vectorized fashion, and reshapes the result so every row contains the  two endpoints of a shank segment in 3D.
 
-        Parameters:
+        Parameters
         ----------
         n_shanks : int, optional
             The number of discrete shank positions to calculate along the envelopes, default is 25.
         distance : float, optional
             The length of the shank, default is 1 + sqrt(5).
 
-        Returns:
+        Returns
         -------
         np.ndarray
             Array of shape ``(len(self.envelopes) * n_shanks, 2, 3)`` where the second dimension stores

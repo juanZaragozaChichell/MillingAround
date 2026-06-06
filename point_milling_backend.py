@@ -255,12 +255,6 @@ class BezierPatch:
     control_net : np.ndarray
         A 4x4 numpy array representing the control net for the Bézier patch. Each entry in the array corresponds to a control point in 3D space, influencing the shape of the bicubic patch.
 
-    Methods
-    -------
-    Bezier(X)
-        Evaluates the Bézier surface at the specified parameter values.
-    DuDvfun(X)
-        Computes the partial derivatives of the Bézier surface at the specified parameter values.
     """
     def __init__(self, control_net : np.array):
         r"""
@@ -461,14 +455,6 @@ class Surface:
     mat_Q : np.ndarray
         A 4x4 numpy array of control points that define the Bézier patch of the surface.
     
-    Methods
-    -------
-    normal_vector(X)
-        Computes and returns the normal vector at the point X on the surface.
-    point_cloud(n_points_u, n_points_v)
-        Generates a point cloud for the surface using a mesh grid of points defined over the domain.
-    offset_pointcloud(m, n_points_u, n_points_v)
-        Generates an offset point cloud for the surface, moving each point by a scalar multiple of the normal vector.
     """
 
     def __init__(self, mat_Q):
@@ -591,26 +577,6 @@ class Envelope:
     theta_of_t : function
         Function describing the tilt angle theta as a function of the parametric coordinates u(t) and v(t).
 
-    Methods
-    -------
-    tangent(t)
-        Computes the normalized tangent vector of the toolpath at a given time t.
-    binormal(t)
-        Computes the normalized binormal vector of the toolpath at a given time t.
-    curvature_ratio(X, direction)
-        Computes the curvature ratio of the surface at point X in the given direction.
-    set_theta_function()
-        Sets or adjusts the theta function based on the milling context; defaults to Meusnier's angle if not specified.
-    value_at(s, t, method='point')
-        Evaluates the envelope's position at given parametric values s and t using specified methods.
-    value_at_for_diff(X)
-        Utility function to facilitate differential calculations at parametric values X.
-    point_projection(punto, initial_parameter, delta=1e-1, tolerance=1e-4)
-        Projects a point onto the toolpath, adjusting for the initial guess of parametric coordinates.
-    shank_at_t(t, distance=1+np.sqrt(5))
-        Computes the shank position and its end position based on the toolpath's geometry at time t.
-    cilindro_at_t(t, distance=1+np.sqrt(5))
-        Constructs a cylindrical representation of the toolpath for visualization and analysis.
     """
 
     def __init__(self, R, surface, u_of_t, v_of_t, mat_phi, mat_theta = False ):
@@ -1004,30 +970,6 @@ class G_function:
         and maximum bounds for the parameters. Typically set to [[0, 1], [0, 1]], covering the full standard
         parametric range of the Bézier surface.
 
-    Methods
-    -------
-    func_for_grad(X)
-        Evaluates the Bézier function, primarily used for gradient calculations within optimization routines.
-    border_u0_root_at_level(z)
-        Finds intersections of the surface with the plane at z along the u=0 border of the domain.
-    border_u1_root_at_level(z)
-        Finds intersections of the surface with the plane at z along the u=1 border of the domain.
-    border_v0_root_at_level(z)
-        Finds intersections of the surface with the plane at z along the v=0 border of the domain.
-    border_v1_root_at_level(z)
-        Finds intersections of the surface with the plane at z along the v=1 border of the domain.
-    all_border_roots(z)
-        Aggregates all roots found on the borders for a given z value and filters out those not lying within the domain.
-    get_next_initial_condition_and_w(r0, delta, w_last=False)
-        Computes the next point and direction for contour tracing starting from a given point using a specified step size.
-    is_approximation_in_range(x1)
-        Checks if a given point is within the valid parametric domain of the surface.
-    get_next_root(z, x1, w)
-        Finds the next point on a contour at a given z level starting from an initial point and moving in a specified direction.
-    level_sets(z, delta=0.01)
-        Traces the complete level curve for a specified z level within the unit square.
-    level_sets_multiple_z(list_of_z, delta=0.01)
-        Traces level curves for multiple z values and aggregates the results.
     """
 
     def __init__(self, mat):

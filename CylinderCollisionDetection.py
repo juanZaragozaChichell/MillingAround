@@ -55,16 +55,6 @@ class CollisionInformation:
     iterations : np.ndarray
         Iteration counters produced by the iterative refinement loop.
 
-    Methods
-    -------
-    colliding_ids()
-        Return the IDs of cylinders currently classified as colliding.
-    non_colliding_ids()
-        Return the IDs of cylinders cleared of collision.
-    save(filepath, compressed=True)
-        Persist the wrapped matrix to disk for later inspection.
-    load(filepath)
-        Restore a :class:`CollisionInformation` instance from a ``.npz`` artifact.
     """
 
     def __init__(self, information_matrix: np.ndarray):
@@ -227,11 +217,10 @@ def check_plane_side(point_to_check, normal_vector, point_in_plane):
 
     Notes
     -----
-    - The implementation is vectorized to efficiently handle multiple
-    points and multiple planes at once.
-    - This is useful in computational geometry tasks such as rendering,
-    collision detection, and any application where relative position to
-    a plane must be quantified.
+    The implementation is vectorized to efficiently handle multiple points and
+    multiple planes at once. This is useful in computational geometry tasks
+    such as rendering, collision detection, and any application where relative
+    position to a plane must be quantified.
     """
     # evaluates <v, p-a>, where v is the normal vector to a plane
     # a is a point in the plane and p is the point we want to check
@@ -245,7 +234,7 @@ class MultipleCylinders:
     r"""
     Manages collision detection among multiple cylinders against a given mesh.
 
-    Parameters:
+    Parameters
     ----------
     set_of_cylinders : np.ndarray
         An array of cylinders where each cylinder is represented by two points representing their medial axis (start and end), shape (N, 2, 3).
@@ -256,7 +245,7 @@ class MultipleCylinders:
     R : float
         The radius of the cylinders, used in collision computations.
 
-    Attributes:
+    Attributes
     ----------
     bottoms : np.ndarray
         Starting points of each cylinder.
@@ -274,7 +263,7 @@ class MultipleCylinders:
         r"""
         Initializes the Multiplecylinders object with necessary geometry and collision detection settings.
 
-        Parameters:
+        Parameters
         ----------
         set_of_cylinders : np.ndarray
             An array of shape (N, 2, 3) where N is the number of cylinders. Each cylinder is represented by two points (bottom and top),
@@ -288,7 +277,7 @@ class MultipleCylinders:
             The radius of the cylinders, used to determine the collision boundary around each cylinder. This parameter defines
             the safety envelope around the linear segments of the cylinders.
 
-        Attributes:
+        Attributes
         ----------
         bottoms : np.ndarray
             The starting points (bottoms) of each cylinder, derived directly from `set_of_cylinders`.
@@ -359,7 +348,7 @@ class MultipleCylinders:
 
         Collision detection is based on the definition given in our SPM2024 paper and the Propositions 1&amp;2
 
-        Parameters:
+        Parameters
         ----------
         list_of_points : list or np.ndarray
             Points to evaluate for potential collisions, expected to be an array-like structure of 3D points.
@@ -367,14 +356,12 @@ class MultipleCylinders:
             Indices of cylinders corresponding to each point in `list_of_points`. This maps each point to a specific
             cylinder for assessing its relationship with the mesh in the context of that cylinder's position and orientation.
 
-        Returns:
+        Returns
         -------
         collision_index : np.ndarray
-            An array indicating the collision status for each point:
-            - -2: Undetermined (initial state).
-            - 1: Non-colliding (safe).
-            - 0: Colliding.
-            - -1: Footpoint below the tool cutter (considered safe).
+            An array indicating the collision status for each point. Codes are
+            ``-2`` for undetermined, ``1`` for non-colliding, ``0`` for
+            colliding, and ``-1`` for footpoint below the tool cutter.
         list_of_points : np.ndarray
             The original list of points passed to the function, formatted as a NumPy array.
         footpoints : np.ndarray
@@ -382,11 +369,11 @@ class MultipleCylinders:
         safe_distances : np.ndarray
             Calculated safe distances from each point to its corresponding footpoint, adjusted for the cylinder's radius.
 
-        Notes:
+        Notes
         -----
-        - The method uses the scene's raycasting capabilities to find the nearest mesh points (footpoints) for the given points.
-        - It calculates whether these points are on the boundary of the mesh, above or below the tool's cutting plane,
-        and their perpendicular distance to the cylinder axis to assess collision risks.
+        The method uses the scene's raycasting capabilities to find the nearest
+        mesh points, then checks boundary status, tool-plane side, and distance
+        to the cylinder axis to assess collision risks.
         """
         
         collision_index = -2*np.ones(len(list_of_points)).astype(int) # set the indicies to undetermined by default
@@ -497,41 +484,17 @@ class MultipleCylinders:
         This method initiates with the assumption that the collision state of each cylinder is unknown ('?').
         Collision detection is based on the our definitions and propositions. The method updates cylinder states iteratively.
 
-        Returns:
+        Returns
         -------
-        tuple
-            A tuple containing:
-            - int: The number of iterations it took to resolve the collision states of all cylinders.
-            - np.ndarray: The updated information matrix detailing the current state of each cylinder, including whether 
-                        it is colliding, non-colliding, or undetermined.
+        tuple[int, CollisionInformation]
+            Number of iterations and a structured wrapper around the updated
+            information matrix.
 
-        Information Matrix Structure:
-        -----------------------------
-        The information matrix contains several columns that store different types of data for each cylinder:
-            0. Collision State ('?', True, False) - Initial unknown state '?', True for colliding, False for non-colliding.
-            1. cylinder Index - Numeric index of the cylinder in the set.
-            2. cylinder Bottom - 3D coordinates of the bottom point of the cylinder.
-            3. cylinder Top - 3D coordinates of the top point of the cylinder.
-            4. List of Points - Dynamic list of points checked for collision along the cylinder.
-            5. List of Footpoints - Corresponding closest points on the mesh for each point checked.
-            6. List of Safe Distances - Computed safe distances for each point to determine if it is within a safe buffer.
-            7. Collision Indices - Dynamic list of collision results for each point checked.
-            8. List of Iterations - Records the iteration number when each point was checked.
-
-        Process:
-        --------
-        1. Initializes the information matrix with default values for all cylinders.
-        2. Iteratively computes the safe distances and checks for collisions using `compute_safe_spheres`.
-        3. Updates the information matrix with new data after each iteration, adjusting points based on their last known safe positions.
-        4. Continues until all cylinders are confirmed as non colliding or a collision is found.
-
-        Notes:
+        Notes
         -----
-        - The method dynamically adjusts the points of evaluation along the cylinder based on previously 
-        calculated safe distances.
-        - It terminates when all cylinders are confirmed as non colliding or a collision is found.
-        - In the final result, only case where a cylinder's colliding state can be '?' is if there's a collision
-        in another cylinder and it has been detected.
+        The method dynamically adjusts evaluation points along the cylinder
+        using previously calculated safe distances. It terminates when all
+        cylinders are confirmed as non-colliding or a collision is found.
         """
 
         # initialization of the information_matrix
@@ -593,40 +556,17 @@ class MultipleCylinders:
         Collision detection is based on the our definitions and propositions. The method updates cylinder states
         iteratively.
 
-        Returns:
+        Returns
         -------
-        tuple
-            A tuple containing:
-            - int: The number of iterations it took to resolve the collision states of all cylinders.
-            - np.ndarray: The updated information matrix detailing the current state of each cylinder, including whether 
-                        it is colliding, non-colliding, or undetermined.
+        tuple[int, CollisionInformation]
+            Number of iterations and a structured wrapper around the updated
+            information matrix.
 
-        Information Matrix Structure:
-        -----------------------------
-        The information matrix contains several columns that store different types of data for each cylinder:
-            0. Collision State ('?', True, False) - Initial unknown state '?', True for colliding, False for non-colliding.
-            1. cylinder Index - Numeric index of the cylinder in the set.
-            2. cylinder Bottom - 3D coordinates of the bottom point of the cylinder.
-            3. cylinder Top - 3D coordinates of the top point of the cylinder.
-            4. List of Points - Dynamic list of points checked for collision along the cylinder.
-            5. List of Footpoints - Corresponding closest points on the mesh for each point checked.
-            6. List of Safe Distances - Computed safe distances for each point to determine if it is within a safe buffer.
-            7. Collision Indices - Dynamic list of collision results for each point checked.
-            8. List of Iterations - Records the iteration number when each point was checked.
-
-        Process:
-        --------
-        1. Initializes the information matrix with default values for all cylinders.
-        2. Iteratively computes the safe distances and checks for collisions using `compute_safe_spheres`.
-        3. Updates the information matrix with new data after each iteration, adjusting points based on their last known safe positions.
-        4. Continues until all cylinders are labeled as (non)colliding.
-
-        Notes:
+        Notes
         -----
-        - The method dynamically adjusts the points of evaluation along the cylinder based on previously 
-        calculated safe distances.
-        - It terminates when all cylinders are labeled as (non)colliding.
-        - In the final result, all cylinders should be 'True' or 'False'.
+        The method dynamically adjusts evaluation points along the cylinder
+        using previously calculated safe distances. It terminates when all
+        cylinders are labeled as colliding or non-colliding.
         """
 
         # initialization of the information_matrix
