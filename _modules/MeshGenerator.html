@@ -51,15 +51,6 @@
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.Arrow">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Arrow</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Composite arrow mesh built from a cylinder shaft and cone tip.</span>
-
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    mesh()</span>
-<span class="sd">        Build the arrow mesh by concatenating shaft and tip.</span>
-<span class="sd">    mesh_data()</span>
-<span class="sd">        Return the vertices and faces composing the arrow.</span>
-<span class="sd">    export_mesh(name)</span>
-<span class="sd">        Export the arrow mesh to disk.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">R1</span><span class="p">,</span> <span class="n">R2</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
@@ -71,9 +62,9 @@
 <span class="sd">            Radius of the cylindrical shaft.</span>
 <span class="sd">        R2 : float</span>
 <span class="sd">            Radius of the cone tip.</span>
-<span class="sd">        bottom : array-like of shape (3,)</span>
+<span class="sd">        bottom : np.ndarray of shape (3,)</span>
 <span class="sd">            Shaft base point.</span>
-<span class="sd">        top : array-like of shape (3,)</span>
+<span class="sd">        top : np.ndarray of shape (3,)</span>
 <span class="sd">            Cone apex point.</span>
 <span class="sd">        t : float</span>
 <span class="sd">            Fraction of the total axis length occupied by the cone (0, 1).</span>
@@ -95,10 +86,10 @@
 <span class="sd">            The assembled arrow mesh.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">start_cone</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">bottom</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">top</span>
-        <span class="n">Cone</span> <span class="o">=</span> <span class="n">Cone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">R2</span><span class="p">,</span> <span class="n">start_cone</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">top</span><span class="p">)</span>
-        <span class="n">Cone_mesh</span> <span class="o">=</span> <span class="n">Cone</span><span class="o">.</span><span class="n">mesh</span><span class="p">(</span><span class="n">caps</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">Cylinder_mesh</span> <span class="o">=</span> <span class="n">Cylinder</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="n">start_cone</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">R1</span><span class="p">)</span><span class="o">.</span><span class="n">mesh</span><span class="p">(</span><span class="n">caps</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">mesh</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">Cone_mesh</span><span class="p">,</span> <span class="n">Cylinder_mesh</span><span class="p">])</span>
+        <span class="n">cone</span> <span class="o">=</span> <span class="n">Cone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">R2</span><span class="p">,</span> <span class="n">start_cone</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">top</span><span class="p">)</span>
+        <span class="n">cone_mesh</span> <span class="o">=</span> <span class="n">cone</span><span class="o">.</span><span class="n">mesh</span><span class="p">(</span><span class="n">caps</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">cylinder_mesh</span> <span class="o">=</span> <span class="n">Cylinder</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="n">start_cone</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">R1</span><span class="p">)</span><span class="o">.</span><span class="n">mesh</span><span class="p">()</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">cone_mesh</span><span class="p">,</span> <span class="n">cylinder_mesh</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">mesh</span></div>
 
     
@@ -135,17 +126,6 @@
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.Cone">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Cone</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Triangulated cone defined by base center, apex, and radius.</span>
-
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    pointcloud()</span>
-<span class="sd">        Sample circular layers along the cone axis.</span>
-<span class="sd">    mesh_data()</span>
-<span class="sd">        Return vertices and triangular faces describing the cone.</span>
-<span class="sd">    mesh(caps=False)</span>
-<span class="sd">        Build a :class:`trimesh.Trimesh` of the cone, optionally capped.</span>
-<span class="sd">    export_mesh(name, caps=False)</span>
-<span class="sd">        Export the cone mesh to disk.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="p">):</span>
@@ -155,9 +135,9 @@
 <span class="sd">        ----------</span>
 <span class="sd">        R : float</span>
 <span class="sd">            Radius of the circular base.</span>
-<span class="sd">        bottom : array-like of shape (3,)</span>
+<span class="sd">        bottom : np.ndarray of shape (3,)</span>
 <span class="sd">            Base center.</span>
-<span class="sd">        top : array-like of shape (3,)</span>
+<span class="sd">        top : np.ndarray of shape (3,)</span>
 <span class="sd">            Cone apex.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="n">R</span>
@@ -274,11 +254,6 @@
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.Sphere">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Sphere</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Thin wrapper around :class:`trimesh.primitives.Sphere`.</span>
-
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    export_mesh(name)</span>
-<span class="sd">        Export the sphere primitive.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">R</span><span class="p">):</span>
@@ -313,21 +288,6 @@
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.ControlNet">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ControlNet</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Utility to visualize Bezier control nets via spheres and cylinders.</span>
-
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    control_points_fun()</span>
-<span class="sd">        Return the flattened control net as ``(nrows*ncols, 3)`` array.</span>
-<span class="sd">    spheres_mesh(R)</span>
-<span class="sd">        Concatenate :class:`Sphere` primitives centered at control points.</span>
-<span class="sd">    edges(R)</span>
-<span class="sd">        Create edge cylinders connecting adjacent control points.</span>
-<span class="sd">    _mesh(spheres_radius, edges_radius)</span>
-<span class="sd">        Combine spheres and cylinders into a single mesh.</span>
-<span class="sd">    export_mesh_separately(names, spheres_radius, edges_radius)</span>
-<span class="sd">        Export spheres and edges meshes independently.</span>
-<span class="sd">    export_mesh(name, spheres_radius, edges_radius)</span>
-<span class="sd">        Export combined control net to disk.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat</span><span class="p">):</span>
@@ -404,21 +364,19 @@
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nrows</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncols</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
                 <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span> <span class="o">=</span> <span class="n">Cylinder</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="n">control_net</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">],</span> <span class="n">top</span><span class="o">=</span><span class="n">control_net</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="n">R</span><span class="p">)</span><span class="o">.</span><span class="n">triangulation</span><span class="p">()</span>
-                <span class="n">Cylinder</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">faces</span><span class="p">)</span>
-                <span class="n">Cylinders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Cylinder</span><span class="p">)</span>
+                <span class="n">cylinder_mesh</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">faces</span><span class="p">)</span>
+                <span class="n">Cylinders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cylinder_mesh</span><span class="p">)</span>
         
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncols</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nrows</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
                 <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span> <span class="o">=</span> <span class="n">Cylinder</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="n">control_net</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">],</span> <span class="n">top</span><span class="o">=</span><span class="n">control_net</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="n">R</span><span class="p">)</span><span class="o">.</span><span class="n">triangulation</span><span class="p">()</span>
-                <span class="n">Cylinder</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">faces</span><span class="p">)</span>
-                <span class="n">Cylinders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Cylinder</span><span class="p">)</span>
+                <span class="n">cylinder_mesh</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">faces</span><span class="p">)</span>
+                <span class="n">Cylinders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cylinder_mesh</span><span class="p">)</span>
 
         <span class="n">Cylinders_mesh</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">Cylinders</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Cylinders_mesh</span></div>
 
     
-<div class="viewcode-block" id="ControlNet._mesh">
-<a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.ControlNet._mesh">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spheres_radius</span><span class="p">,</span> <span class="n">edges_radius</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Combine spheres and cylinders into a single mesh.</span>
 
@@ -436,8 +394,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">spheres</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spheres_mesh</span><span class="p">(</span><span class="n">spheres_radius</span><span class="p">)</span>
         <span class="n">edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">edges_radius</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">spheres</span><span class="p">,</span> <span class="n">edges</span><span class="p">])</span></div>
-
+        <span class="k">return</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">spheres</span><span class="p">,</span> <span class="n">edges</span><span class="p">])</span>
 
 <div class="viewcode-block" id="ControlNet.export_mesh_separately">
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.ControlNet.export_mesh_separately">[docs]</a>
@@ -480,15 +437,6 @@
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.Surface">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Surface</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Convenience wrapper that exposes :class:`point_milling_backend.Surface`.</span>
-
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    generate_mesh_data()</span>
-<span class="sd">        Return vertices, faces and normals from the backend surface.</span>
-<span class="sd">    _mesh()</span>
-<span class="sd">        Build a :class:`trimesh.Trimesh` instance from backend data.</span>
-<span class="sd">    export_mesh(name)</span>
-<span class="sd">        Export the baked surface mesh to disk.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
@@ -516,8 +464,6 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">point_cloud</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="Surface._mesh">
-<a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.Surface._mesh">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Build a :class:`trimesh.Trimesh` instance from backend data.</span>
 
@@ -528,8 +474,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">vert_normals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_mesh_data</span><span class="p">()</span>
         <span class="n">mesh</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">faces</span> <span class="o">=</span> <span class="n">faces</span><span class="o">.</span><span class="n">triangles</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">mesh</span></div>
-
+        <span class="k">return</span> <span class="n">mesh</span>
 
 <div class="viewcode-block" id="Surface.export_mesh">
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.Surface.export_mesh">[docs]</a>
@@ -549,15 +494,6 @@
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.Disk">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Disk</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Planar disk triangulation defined by center, normal, and radius.</span>
-
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    pointcloud(num_points=50)</span>
-<span class="sd">        Return circle samples plus center vertex.</span>
-<span class="sd">    mesh_data(num_points=50)</span>
-<span class="sd">        Generate vertices and fan faces for the disk.</span>
-<span class="sd">    export_mesh(name)</span>
-<span class="sd">        Export the disk mesh to disk.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span><span class="n">normal_vector</span><span class="p">,</span> <span class="n">R</span><span class="p">):</span>
@@ -567,7 +503,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        center : array-like of shape (3,)</span>
 <span class="sd">            Disk center.</span>
-<span class="sd">        normal_vector : array-like of shape (3,)</span>
+<span class="sd">        normal_vector : np.ndarray of shape (3,)</span>
 <span class="sd">            Plane normal.</span>
 <span class="sd">        R : float</span>
 <span class="sd">            Disk radius.</span>
@@ -659,23 +595,6 @@
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.PipeSurface">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PipeSurface</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Generate tubular meshes around parametric curves.</span>
-
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    tangent_vector(t)</span>
-<span class="sd">        Approximate curve tangent at parameter ``t``.</span>
-<span class="sd">    orthonormal_frame(t)</span>
-<span class="sd">        Return Frenet-like frame ``(T, N, B)`` at ``t``.</span>
-<span class="sd">    circle(t, resolution=50)</span>
-<span class="sd">        Return a circle of radius ``R`` orthogonal to the curve at ``t``.</span>
-<span class="sd">    pointcloud(resolution_circle=50, resolution_time=100)</span>
-<span class="sd">        Sample the full pipe surface as a structured array.</span>
-<span class="sd">    mesh_data(resolution_circle=50, resolution_time=100)</span>
-<span class="sd">        Return vertices and faces describing the tube surface.</span>
-<span class="sd">    mesh(caps=False, resolution_circle=50, resolution_time=100)</span>
-<span class="sd">        Build the :class:`trimesh.Trimesh` pipe, optionally capping the ends.</span>
-<span class="sd">    export_mesh(name, caps=False, resolution_circle=50, resolution_time=100)</span>
-<span class="sd">        Export a discretized pipe to ``name``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curve</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">R</span><span class="p">):</span>
@@ -684,7 +603,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        curve : callable</span>
-<span class="sd">            Function ``t -&gt; (3,)`` returning curve positions.</span>
+<span class="sd">            Function ``t -&gt; np.ndarray`` returning curve positions.</span>
 <span class="sd">        Range : tuple[float, float]</span>
 <span class="sd">            Parameter domain inclusive.</span>
 <span class="sd">        R : float</span>
@@ -709,7 +628,8 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
-<span class="sd">            Tangent vector normalized to unit length.</span>
+<span class="sd">            Finite-difference tangent vector.  Normalize it before using it as</span>
+<span class="sd">            a direction vector.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">curve_flat</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">curve</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
         <span class="n">tangent</span> <span class="o">=</span> <span class="n">approx_fprime</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">curve_flat</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
@@ -832,6 +752,15 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">caps</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">resolution_circle</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">resolution_time</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Build the :class:`trimesh.Trimesh` pipe, optionally capping the ends.</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        caps : bool, optional</span>
+<span class="sd">            When ``True`` add disk caps at the start and end of the curve.</span>
+<span class="sd">        resolution_circle : int, optional</span>
+<span class="sd">            Number of samples around each circular cross-section and cap.</span>
+<span class="sd">        resolution_time : int, optional</span>
+<span class="sd">            Number of samples along the guiding curve.</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        trimesh.Trimesh</span>
@@ -846,8 +775,8 @@
         <span class="k">if</span> <span class="n">caps</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">mesh</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">tapa_abajo</span> <span class="o">=</span> <span class="n">Disk</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curva</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Range</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">normal_vector</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tangent_vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Range</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">)</span><span class="o">.</span><span class="n">triangulation</span><span class="p">()</span>
-            <span class="n">tapa_arriba</span> <span class="o">=</span> <span class="n">Disk</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curva</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Range</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">normal_vector</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tangent_vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Range</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">)</span><span class="o">.</span><span class="n">triangulation</span><span class="p">()</span>
+            <span class="n">tapa_abajo</span> <span class="o">=</span> <span class="n">Disk</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Range</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">normal_vector</span><span class="o">=-</span><span class="bp">self</span><span class="o">.</span><span class="n">tangent_vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Range</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">)</span><span class="o">.</span><span class="n">mesh_data</span><span class="p">(</span><span class="n">num_points</span><span class="o">=</span><span class="n">resolution_circle</span><span class="p">)</span>
+            <span class="n">tapa_arriba</span> <span class="o">=</span> <span class="n">Disk</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Range</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">normal_vector</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tangent_vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Range</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">)</span><span class="o">.</span><span class="n">mesh_data</span><span class="p">(</span><span class="n">num_points</span><span class="o">=</span><span class="n">resolution_circle</span><span class="p">)</span>
             <span class="n">mesh_tapa_abajo</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">(</span><span class="n">vertices</span> <span class="o">=</span> <span class="n">tapa_abajo</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">faces</span> <span class="o">=</span> <span class="n">tapa_abajo</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="n">mesh_tapa_arriba</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">(</span><span class="n">vertices</span> <span class="o">=</span> <span class="n">tapa_arriba</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">faces</span> <span class="o">=</span> <span class="n">tapa_arriba</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="n">concatenated</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">mesh</span><span class="p">,</span> <span class="n">mesh_tapa_abajo</span><span class="p">,</span> <span class="n">mesh_tapa_arriba</span><span class="p">])</span>
@@ -857,7 +786,19 @@
 <div class="viewcode-block" id="PipeSurface.export_mesh">
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.PipeSurface.export_mesh">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">export_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">caps</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">resolution_circle</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">resolution_time</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Export a discretized pipe to ``name``.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Export a discretized pipe to ``name``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str or path-like</span>
+<span class="sd">            Output file path.</span>
+<span class="sd">        caps : bool, optional</span>
+<span class="sd">            Mirrors :meth:`mesh` ``caps`` argument.</span>
+<span class="sd">        resolution_circle : int, optional</span>
+<span class="sd">            Number of samples around each circular cross-section and cap.</span>
+<span class="sd">        resolution_time : int, optional</span>
+<span class="sd">            Number of samples along the guiding curve.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resolution_circle</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">resolution_circle</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;resolution_circle must be an integer greater than or equal to 3&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resolution_time</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">resolution_time</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
@@ -881,7 +822,7 @@
 <span class="sd">    radius : float</span>
 <span class="sd">        Cylinder radius.</span>
 <span class="sd">    sections : int, optional</span>
-<span class="sd">        Number of radial segments passed to ``trimesh.creation.cylinder`` (default ``32``).</span>
+<span class="sd">        Number of radial segments passed to ``trimesh.creation.cylinder`` (default ``64``).</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -894,18 +835,6 @@
 <span class="sd">    sections : int</span>
 <span class="sd">        Radial tessellation used for the procedural mesh.</span>
 
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    mesh()</span>
-<span class="sd">        Return a :class:`trimesh.Trimesh` oriented between ``bottom`` and ``top``.</span>
-<span class="sd">    mesh_data()</span>
-<span class="sd">        Return the vertices and faces of the procedurally generated cylinder.</span>
-<span class="sd">    triangulation(angle_resolution=128, height_resolution=64, caps=False, cap_resolution=None)</span>
-<span class="sd">        Return a Delaunay triangulation of the cylinder surface.</span>
-<span class="sd">    delaunay_mesh(angle_resolution=128, height_resolution=64, caps=False, cap_resolution=None)</span>
-<span class="sd">        Return a :class:`trimesh.Trimesh` generated via Delaunay triangulation.</span>
-<span class="sd">    export_mesh(name)</span>
-<span class="sd">        Export the procedurally generated cylinder.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
@@ -1040,15 +969,21 @@
 
 <div class="viewcode-block" id="Cylinder.export_mesh">
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.Cylinder.export_mesh">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">export_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Export the procedurally generated cylinder.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">export_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">caps</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Export the cylinder mesh.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        name : str or path-like</span>
 <span class="sd">            Output file path.</span>
+<span class="sd">        caps : bool, optional</span>
+<span class="sd">            When ``True`` export ``delaunay_mesh(caps=True)``. Otherwise export</span>
+<span class="sd">            the procedural mesh from :meth:`mesh`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">()</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">caps</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">delaunay_mesh</span><span class="p">(</span><span class="n">caps</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">()</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
 </div>
 
 
@@ -1056,19 +991,6 @@
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.RuledSurface">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RuledSurface</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Interpolate between two parametric curves to form a ruled surface.</span>
-
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    point(s, t)</span>
-<span class="sd">        Evaluate the ruled surface at ``s`` and ``t``.</span>
-<span class="sd">    pointcloud(s_resolution=100, t_resolution=100)</span>
-<span class="sd">        Return a structured grid sampling the ruled surface.</span>
-<span class="sd">    mesh_data(s_resolution=100, t_resolution=100)</span>
-<span class="sd">        Return vertices and faces describing the ruled surface.</span>
-<span class="sd">    mesh(s_resolution=100, t_resolution=100)</span>
-<span class="sd">        Build the :class:`trimesh.Trimesh` for the ruled surface.</span>
-<span class="sd">    export_mesh(name, s_resolution=100, t_resolution=100)</span>
-<span class="sd">        Export the ruled surface mesh to ``name``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curve1</span><span class="p">,</span> <span class="n">curve2</span><span class="p">):</span>
@@ -1095,6 +1017,13 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">pointcloud</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s_resolution</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">t_resolution</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return a structured grid sampling the ruled surface.</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s_resolution : int, optional</span>
+<span class="sd">            Number of interpolation samples between the two curves.</span>
+<span class="sd">        t_resolution : int, optional</span>
+<span class="sd">            Number of samples along each bounding curve.</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
@@ -1113,6 +1042,13 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">mesh_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s_resolution</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">t_resolution</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return vertices and faces describing the ruled surface.</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s_resolution : int, optional</span>
+<span class="sd">            Number of interpolation samples between the two curves.</span>
+<span class="sd">        t_resolution : int, optional</span>
+<span class="sd">            Number of samples along each bounding curve.</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        tuple[np.ndarray, np.ndarray]</span>
@@ -1122,22 +1058,17 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;s_resolution must be an integer greater than or equal to 2&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t_resolution</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">t_resolution</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;t_resolution must be an integer greater than or equal to 2&quot;</span><span class="p">)</span>
-        <span class="c1"># Generate cylinder points</span>
+        <span class="c1"># Generate ruled-surface points</span>
         <span class="n">cylinder_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointcloud</span><span class="p">(</span><span class="n">s_resolution</span> <span class="o">=</span> <span class="n">s_resolution</span><span class="p">,</span> <span class="n">t_resolution</span> <span class="o">=</span> <span class="n">t_resolution</span><span class="p">)</span>
         
         <span class="c1"># Reshape the points into (N, 3) array where N is number of points</span>
         <span class="n">points</span> <span class="o">=</span> <span class="n">cylinder_points</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
         
-        <span class="c1"># Correctly calculate the circle indices</span>
-        <span class="c1"># We need to base the triangulation on the first circle of the cylinder</span>
-        <span class="c1"># first_circle_points = points[:50]  # Assuming each circle has 50 points</span>
-        <span class="c1"># base_triangulation = Delaunay(first_circle_points[:, :2])  # 2D triangulation based on x, y coordinates</span>
-        
         <span class="c1"># Create an array to hold the triangles</span>
         <span class="n">triangles</span> <span class="o">=</span> <span class="p">[]</span>
         
-        <span class="c1"># Get number of points per circle</span>
-        <span class="n">num_points_per_circle</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="c1"># Get number of points per curve sample</span>
+        <span class="n">num_points_per_circle</span> <span class="o">=</span> <span class="n">s_resolution</span>
         
         <span class="c1"># Triangulate the lateral surface</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cylinder_points</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>  <span class="c1"># Number of layers of points minus one</span>
@@ -1157,6 +1088,13 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s_resolution</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">t_resolution</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Build the :class:`trimesh.Trimesh` for the ruled surface.</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s_resolution : int, optional</span>
+<span class="sd">            Number of interpolation samples between the two curves.</span>
+<span class="sd">        t_resolution : int, optional</span>
+<span class="sd">            Number of samples along each bounding curve.</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        trimesh.Trimesh</span>
@@ -1174,7 +1112,17 @@
 <div class="viewcode-block" id="RuledSurface.export_mesh">
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.RuledSurface.export_mesh">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">export_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">s_resolution</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">t_resolution</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Export the ruled surface mesh to ``name``.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Export the ruled surface mesh to ``name``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str or path-like</span>
+<span class="sd">            Output file path.</span>
+<span class="sd">        s_resolution : int, optional</span>
+<span class="sd">            Number of interpolation samples between the two curves.</span>
+<span class="sd">        t_resolution : int, optional</span>
+<span class="sd">            Number of samples along each bounding curve.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s_resolution</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">s_resolution</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;s_resolution must be an integer greater than or equal to 2&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t_resolution</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">t_resolution</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
@@ -1188,19 +1136,6 @@
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.CircleEnvelope">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CircleEnvelope</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Envelope surface generated by sweeping circles along a path.</span>
-
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    axis_normalized()</span>
-<span class="sd">        Return normalized axis vectors for each sample.</span>
-<span class="sd">    triangulation()</span>
-<span class="sd">        Triangulate the parameter space spanned by angle and time.</span>
-<span class="sd">    pointcloud(resolution_circle=None)</span>
-<span class="sd">        Return the sampled envelope points.</span>
-<span class="sd">    mesh(resolution_circle=None)</span>
-<span class="sd">        Build a :class:`trimesh.Trimesh` envelope.</span>
-<span class="sd">    export_mesh(name, resolution_circle=None)</span>
-<span class="sd">        Export the envelope mesh to ``name``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contact_points</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span><span class="n">axis</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">angle_resolution</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
@@ -1316,17 +1251,6 @@
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.Heatmap">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Heatmap</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Attach scalar data to meshes and visualize/export them.</span>
-
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    scalars_to_colors()</span>
-<span class="sd">        Convert scalar field to RGBA colors using the configured colorscale.</span>
-<span class="sd">    _mesh_with_colors()</span>
-<span class="sd">        Return a copy of the mesh decorated with per-vertex colors.</span>
-<span class="sd">    export_mesh(name)</span>
-<span class="sd">        Export the colored mesh to ``name`` (PLY enforced).</span>
-<span class="sd">    plotly_figure(showlegend=True, name=&#39;Heatmap&#39;)</span>
-<span class="sd">        Create a Plotly figure visualizing the colored surface.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">array_of_scalars</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">,</span>  <span class="n">colorscale</span> <span class="o">=</span> <span class="s1">&#39;turbo_r&#39;</span><span class="p">):</span>
@@ -1386,8 +1310,6 @@
         <span class="k">return</span> <span class="n">rgba_values</span></div>
 
 
-<div class="viewcode-block" id="Heatmap._mesh_with_colors">
-<a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.Heatmap._mesh_with_colors">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_mesh_with_colors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return a copy of the mesh decorated with per-vertex colors.</span>
 
@@ -1405,8 +1327,7 @@
                                             <span class="n">faces</span><span class="o">=</span><span class="n">faces</span><span class="p">,</span>
                                             <span class="n">vertex_normals</span><span class="o">=</span><span class="n">normals</span><span class="p">,</span>
                                             <span class="n">vertex_colors</span><span class="o">=</span><span class="n">vertex_colors</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">mesh_with_colors</span></div>
-
+        <span class="k">return</span> <span class="n">mesh_with_colors</span>
 
 <div class="viewcode-block" id="Heatmap.export_mesh">
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.Heatmap.export_mesh">[docs]</a>
@@ -1479,21 +1400,34 @@
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.Torus">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Torus</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Procedurally create a torus oriented along an arbitrary axis.</span>
-
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    mesh()</span>
-<span class="sd">        Build the rotated torus as a :class:`trimesh.Trimesh`.</span>
-<span class="sd">    export_mesh(name)</span>
-<span class="sd">        Export the torus mesh to disk.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">R_major</span><span class="p">,</span> <span class="n">R_minor</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Store the torus parameters.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">R_major</span><span class="p">,</span> <span class="n">R_minor</span><span class="p">,</span> <span class="n">major_sections</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">minor_sections</span><span class="o">=</span><span class="mi">32</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Store the torus parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        center : np.ndarray of shape (3,)</span>
+<span class="sd">            Torus center.</span>
+<span class="sd">        axis : np.ndarray of shape (3,)</span>
+<span class="sd">            Direction normal to the torus plane.</span>
+<span class="sd">        R_major : float</span>
+<span class="sd">            Radius from the torus center to the tube centerline.</span>
+<span class="sd">        R_minor : float</span>
+<span class="sd">            Radius of the tube.</span>
+<span class="sd">        major_sections : int, optional</span>
+<span class="sd">            Number of samples around the torus centerline.</span>
+<span class="sd">        minor_sections : int, optional</span>
+<span class="sd">            Number of samples around the tube cross-section.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">center</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">R_major</span> <span class="o">=</span> <span class="n">R_major</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">R_minor</span> <span class="o">=</span> <span class="n">R_minor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">major_sections</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">major_sections</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minor_sections</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">minor_sections</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">major_sections</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">minor_sections</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;major_sections and minor_sections must be &gt;= 3&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Torus.mesh">
 <a class="viewcode-back" href="../api/mesh_generator.html#MeshGenerator.Torus.mesh">[docs]</a>
@@ -1511,7 +1445,12 @@
         <span class="n">unit_segment_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">/</span> <span class="n">segment_length</span>
 
         <span class="c1"># Create the torus aligned with the Z axis at the origin</span>
-        <span class="n">torus</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">creation</span><span class="o">.</span><span class="n">torus</span><span class="p">(</span><span class="n">major_radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">R_major</span><span class="p">,</span> <span class="n">minor_radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">R_minor</span><span class="p">)</span>
+        <span class="n">torus</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">creation</span><span class="o">.</span><span class="n">torus</span><span class="p">(</span>
+            <span class="n">major_radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">R_major</span><span class="p">,</span>
+            <span class="n">minor_radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">R_minor</span><span class="p">,</span>
+            <span class="n">major_sections</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">major_sections</span><span class="p">,</span>
+            <span class="n">minor_sections</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">minor_sections</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="c1"># Compute rotation matrix to align Z axis to unit_segment_vector</span>
         <span class="n">z_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>

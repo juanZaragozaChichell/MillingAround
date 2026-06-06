@@ -71,13 +71,9 @@ geometric and machining objects.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul>
-<li><p><strong>c</strong> (<em>2D NumPy array of shape (4,4)</em>) – The 16 fitted scalar coefficients c_{i,j}.
-So the fitted surface is:</p>
-<blockquote>
-<div><p>z = sum_{i=0..3} sum_{j=0..3} c[i,j]*B_i(u)*B_j(v).</p>
-</div></blockquote>
-</li>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>c</strong> (<em>2D NumPy array of shape (4,4)</em>) – The 16 fitted scalar coefficients <code class="docutils literal notranslate"><span class="pre">c[i,</span> <span class="pre">j]</span></code> defining
+<code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">=</span> <span class="pre">sum_{i=0..3}</span> <span class="pre">sum_{j=0..3}</span> <span class="pre">c[i,j]</span> <span class="pre">*</span> <span class="pre">B_i(u)</span> <span class="pre">*</span> <span class="pre">B_j(v)</span></code>.</p></li>
 <li><p><strong>P</strong> (<em>np.ndarray of shape (4, 4, 3)</em>) – Control net points <code class="docutils literal notranslate"><span class="pre">(i/3,</span> <span class="pre">j/3,</span> <span class="pre">c[i,</span> <span class="pre">j])</span></code> composing the bicubic patch.</p></li>
 </ul>
 </p>
@@ -293,29 +289,6 @@ simulation, visualization, or verification tasks.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.matrices">
-<span class="sig-name descname"><span class="pre">matrices</span></span><a class="headerlink" href="#point_milling_frontend.MachiningParameters.matrices" title="Link to this definition">¶</a></dt>
-<dd><p>Stack of three <code class="docutils literal notranslate"><span class="pre">4x4</span></code> matrices used respectively for the G-function, <code class="docutils literal notranslate"><span class="pre">phi</span></code> rotation, and <code class="docutils literal notranslate"><span class="pre">theta</span></code> tilt.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.number_of_paths">
-<span class="sig-name descname"><span class="pre">number_of_paths</span></span><a class="headerlink" href="#point_milling_frontend.MachiningParameters.number_of_paths" title="Link to this definition">¶</a></dt>
-<dd><p>Requested number of level sets sampled from the G-function. Multiple components can increase
-the actual number of contact curves.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.h">
 <span class="sig-name descname"><span class="pre">h</span></span><a class="headerlink" href="#point_milling_frontend.MachiningParameters.h" title="Link to this definition">¶</a></dt>
 <dd><p>Safety margin applied when computing minimum/maximum values of <code class="docutils literal notranslate"><span class="pre">G</span></code> to avoid degenerate level sets.</p>
@@ -370,45 +343,9 @@ the actual number of contact curves.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.triangulate">
-<span class="sig-name descname"><span class="pre">triangulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">...</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.triangulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_frontend.MachiningParameters.triangulate" title="Link to this definition">¶</a></dt>
-<dd><p>Return vertices, connectivity, and normals for the surface or its offset.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.G_level_sets">
-<span class="sig-name descname"><span class="pre">G_level_sets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.G_level_sets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_frontend.MachiningParameters.G_level_sets" title="Link to this definition">¶</a></dt>
-<dd><p>Sample consistently oriented level sets from the current <code class="docutils literal notranslate"><span class="pre">G_function</span></code>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.uv_curves_parametrized">
-<span class="sig-name descname"><span class="pre">uv_curves_parametrized</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.uv_curves_parametrized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_frontend.MachiningParameters.uv_curves_parametrized" title="Link to this definition">¶</a></dt>
-<dd><p>Convert the level-set curves into cubic spline parametrizations for <code class="docutils literal notranslate"><span class="pre">u</span></code> and <code class="docutils literal notranslate"><span class="pre">v</span></code>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.concatenated_envelopes_fun">
-<span class="sig-name descname"><span class="pre">concatenated_envelopes_fun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">...</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.concatenated_envelopes_fun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_frontend.MachiningParameters.concatenated_envelopes_fun" title="Link to this definition">¶</a></dt>
-<dd><p>Discretize every envelope and merge them into a single mesh, with several trimming options.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.discrete_shanks_vectorized">
-<span class="sig-name descname"><span class="pre">discrete_shanks_vectorized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">...</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.discrete_shanks_vectorized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_frontend.MachiningParameters.discrete_shanks_vectorized" title="Link to this definition">¶</a></dt>
-<dd><p>Evaluate shank positions across all envelopes in a vectorized fashion.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.error_measure_per_vertex">
-<span class="sig-name descname"><span class="pre">error_measure_per_vertex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.error_measure_per_vertex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_frontend.MachiningParameters.error_measure_per_vertex" title="Link to this definition">¶</a></dt>
-<dd><p>Raycast surface normals against the envelopes to obtain per-vertex machining error.</p>
-</dd></dl>
-
 <dl class="py property">
-<dt class="sig sig-object py" id="id0">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">number_of_paths</span></span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.number_of_paths">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">number_of_paths</span></span><a class="headerlink" href="#point_milling_frontend.MachiningParameters.number_of_paths" title="Link to this definition">¶</a></dt>
 <dd><p>Target number of G-function level sets used when generating envelopes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -418,8 +355,8 @@ the actual number of contact curves.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id1">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">matrices</span></span><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.matrices">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">matrices</span></span><a class="headerlink" href="#point_milling_frontend.MachiningParameters.matrices" title="Link to this definition">¶</a></dt>
 <dd><p>Get the current set of transformation matrices used in the machining process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -460,8 +397,8 @@ the actual number of contact curves.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">triangulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surfaces_resolution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.triangulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.triangulate">
+<span class="sig-name descname"><span class="pre">triangulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surfaces_resolution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.triangulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_frontend.MachiningParameters.triangulate" title="Link to this definition">¶</a></dt>
 <dd><p>Generate mesh data for the requested geometric object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -488,8 +425,8 @@ the actual number of contact curves.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id3">
-<span class="sig-name descname"><span class="pre">G_level_sets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.G_level_sets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.G_level_sets">
+<span class="sig-name descname"><span class="pre">G_level_sets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.G_level_sets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_frontend.MachiningParameters.G_level_sets" title="Link to this definition">¶</a></dt>
 <dd><p>Compute level sets of the G-function with consistent orientation.</p>
 <p>This method minimizes and maximizes the third component of <code class="docutils literal notranslate"><span class="pre">G</span></code> (the height) using
 <code class="docutils literal notranslate"><span class="pre">scipy.optimize.differential_evolution</span></code> and then samples <code class="docutils literal notranslate"><span class="pre">self._number_of_paths</span></code>
@@ -510,8 +447,8 @@ fidelity at the expense of runtime.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">uv_curves_parametrized</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.uv_curves_parametrized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.uv_curves_parametrized">
+<span class="sig-name descname"><span class="pre">uv_curves_parametrized</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.uv_curves_parametrized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_frontend.MachiningParameters.uv_curves_parametrized" title="Link to this definition">¶</a></dt>
 <dd><p>Parametrize the <code class="docutils literal notranslate"><span class="pre">u</span></code> and <code class="docutils literal notranslate"><span class="pre">v</span></code> curves derived from the G-function level sets.</p>
 <p>Each level set is converted into a pseudo arc-length parameter <code class="docutils literal notranslate"><span class="pre">t</span></code> (ranging from 0 to 1) via
 <a class="reference internal" href="#point_milling_frontend.tiempos_porcentuales" title="point_milling_frontend.tiempos_porcentuales"><code class="xref py py-func docutils literal notranslate"><span class="pre">tiempos_porcentuales()</span></code></a>. Cubic splines are then fitted independently to the <code class="docutils literal notranslate"><span class="pre">u</span></code> and <code class="docutils literal notranslate"><span class="pre">v</span></code>
@@ -528,8 +465,8 @@ components so they can be evaluated at arbitrary <code class="docutils literal n
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id5">
-<span class="sig-name descname"><span class="pre">concatenated_envelopes_fun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'by_excess'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.concatenated_envelopes_fun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.concatenated_envelopes_fun">
+<span class="sig-name descname"><span class="pre">concatenated_envelopes_fun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'by_excess'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.concatenated_envelopes_fun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_frontend.MachiningParameters.concatenated_envelopes_fun" title="Link to this definition">¶</a></dt>
 <dd><p>Concatenate discretized envelopes with different trimming strategies.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -555,32 +492,30 @@ visualization purposes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">discrete_shanks_vectorized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_shanks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.23606797749979</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.discrete_shanks_vectorized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.discrete_shanks_vectorized">
+<span class="sig-name descname"><span class="pre">discrete_shanks_vectorized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_shanks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.23606797749979</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.discrete_shanks_vectorized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_frontend.MachiningParameters.discrete_shanks_vectorized" title="Link to this definition">¶</a></dt>
 <dd><p>Compute discrete shank positions in a vectorized form for all envelopes.</p>
 <p>This routine samples <code class="docutils literal notranslate"><span class="pre">n_shanks</span></code> for each envelope, calls <code class="xref py py-meth docutils literal notranslate"><span class="pre">pmb.Envelope.shank_at_t()</span></code> in a vectorized fashion, and reshapes the result so every row contains the  two endpoints of a shank segment in 3D.</p>
-<section id="parameters">
-<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
-<dl class="simple">
-<dt>n_shanks<span class="classifier">int, optional</span></dt><dd><p>The number of discrete shank positions to calculate along the envelopes, default is 25.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_shanks</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of discrete shank positions to calculate along the envelopes, default is 25.</p></li>
+<li><p><strong>distance</strong> (<em>float</em><em>, </em><em>optional</em>) – The length of the shank, default is 1 + sqrt(5).</p></li>
+</ul>
 </dd>
-<dt>distance<span class="classifier">float, optional</span></dt><dd><p>The length of the shank, default is 1 + sqrt(5).</p>
-</dd>
-</dl>
-</section>
-<section id="returns">
-<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">¶</a></h2>
-<dl class="simple">
-<dt>np.ndarray</dt><dd><p>Array of shape <code class="docutils literal notranslate"><span class="pre">(len(self.envelopes)</span> <span class="pre">*</span> <span class="pre">n_shanks,</span> <span class="pre">2,</span> <span class="pre">3)</span></code> where the second dimension stores
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array of shape <code class="docutils literal notranslate"><span class="pre">(len(self.envelopes)</span> <span class="pre">*</span> <span class="pre">n_shanks,</span> <span class="pre">2,</span> <span class="pre">3)</span></code> where the second dimension stores
 <code class="docutils literal notranslate"><span class="pre">(shank_bottom,</span> <span class="pre">shank_top)</span></code>.</p>
 </dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
 </dl>
-</section>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id7">
-<span class="sig-name descname"><span class="pre">error_measure_per_vertex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.error_measure_per_vertex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id7" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_frontend.MachiningParameters.error_measure_per_vertex">
+<span class="sig-name descname"><span class="pre">error_measure_per_vertex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_frontend.html#MachiningParameters.error_measure_per_vertex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_frontend.MachiningParameters.error_measure_per_vertex" title="Link to this definition">¶</a></dt>
 <dd><p>Measure machining error at each surface vertex via raycasting.</p>
 <p>All envelopes are discretized with <code class="docutils literal notranslate"><span class="pre">method='by_excess'</span></code> and inserted into an Open3D tensor
 <code class="docutils literal notranslate"><span class="pre">RaycastingScene</span></code>. Each vertex normal of the nominal surface is used as a ray direction after

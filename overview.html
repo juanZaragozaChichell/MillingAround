@@ -41,7 +41,7 @@
 <p>Python utilities for studying tool/workpiece interactions in point milling. The
 codebase collects the collision-detection routines from the paper <em>Collision-
 free Tool Motion Planning for 5-Axis CNC Machining with Toroidal Cutters</em>
-(<a class="reference external" href="https://www.sciencedirect.com/science/article/abs/pii/S0010448524000526?via%3Dihub">https://www.sciencedirect.com/science/article/abs/pii/S0010448524000526?via%3Dihub</a>, <a class="reference external" href="https://bird.bcamath.org/handle/20.500.11824/1842">https://bird.bcamath.org/handle/20.500.11824/1842</a>)
+(<a class="reference external" href="https://doi.org/10.1016/j.cad.2024.103725">https://doi.org/10.1016/j.cad.2024.103725</a>, <a class="reference external" href="https://bird.bcamath.org/handle/20.500.11824/1842">https://bird.bcamath.org/handle/20.500.11824/1842</a>)
 covering cylinders versus triangle meshes, and the tooling used to model
 toroidal/flat-end cutters moving over bicubic Bézier patches. Jupyter notebooks
 and precomputed media illustrate the workflows.</p>
@@ -81,12 +81,39 @@ over the metal surface: starting at the top of the medial axis, the first
 footpoint is computed (cyan) and the first safe ball is constructed (green);
 the process then iterates from the boundary of the safe ball. It stops when a
 footpoint lies below the cutting plane (black circle), finalizing that cylinder.</p>
-<img alt="Collision detection animation" src="_images/collision_detection.gif" />
+<img alt="Collision detection animation" src="https://raw.githubusercontent.com/juanZaragozaChichell/MillingAround/main/video_stuff/collision_detection.gif" />
 </section>
 <section id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h2>
 <p>For a browsable version of the API docs, visit
 <a class="reference external" href="https://juanZaragozaChichell.github.io/MillingAround/">https://juanZaragozaChichell.github.io/MillingAround/</a> .</p>
+</section>
+<section id="cite-us">
+<h2>Cite Us<a class="headerlink" href="#cite-us" title="Link to this heading">¶</a></h2>
+<p>If you use the algorithms or collision-detection method in this repository,
+please cite the paper:</p>
+<div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@article</span><span class="p">{</span><span class="nl">zaragozachichell2024collisionfree</span><span class="p">,</span>
+<span class="w">  </span><span class="na">title</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Collision-free Tool Motion Planning for 5-Axis CNC Machining with Toroidal Cutters}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Zaragoza Chichell, Juan and Re{\v{c}}kov{\&#39;a}, Alena and Bizzarri, Michal and Barto{\v{n}}, Michael}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">journal</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Computer-Aided Design}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">volume</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{173}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">pages</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{103725}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">year</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{2024}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">doi</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{10.1016/j.cad.2024.103725}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">url</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{https://doi.org/10.1016/j.cad.2024.103725}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If you use the repository or software directly, please also cite:</p>
+<div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@misc</span><span class="p">{</span><span class="nl">zaragozachichell2026millingaround</span><span class="p">,</span>
+<span class="w">  </span><span class="na">title</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{MillingAround: Python Utilities for Point Milling and Collision Detection}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Zaragoza Chichell, Juan}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">year</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{2026}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">url</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{https://github.com/juanZaragozaChichell/MillingAround}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">note</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Software repository}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
@@ -133,6 +160,7 @@ Python 3.11.7. To replicate the environment, run the following:</p>
 <li class="toctree-l2"><a class="reference internal" href="#repository-layout">Repository Layout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#animation">Animation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cite-us">Cite Us</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
 </ul>
 </li>

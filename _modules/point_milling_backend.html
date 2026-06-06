@@ -317,12 +317,6 @@
 <span class="sd">    control_net : np.ndarray</span>
 <span class="sd">        A 4x4 numpy array representing the control net for the Bézier patch. Each entry in the array corresponds to a control point in 3D space, influencing the shape of the bicubic patch.</span>
 
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    Bezier(X)</span>
-<span class="sd">        Evaluates the Bézier surface at the specified parameter values.</span>
-<span class="sd">    DuDvfun(X)</span>
-<span class="sd">        Computes the partial derivatives of the Bézier surface at the specified parameter values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">control_net</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -538,14 +532,6 @@
 <span class="sd">    mat_Q : np.ndarray</span>
 <span class="sd">        A 4x4 numpy array of control points that define the Bézier patch of the surface.</span>
 <span class="sd">    </span>
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    normal_vector(X)</span>
-<span class="sd">        Computes and returns the normal vector at the point X on the surface.</span>
-<span class="sd">    point_cloud(n_points_u, n_points_v)</span>
-<span class="sd">        Generates a point cloud for the surface using a mesh grid of points defined over the domain.</span>
-<span class="sd">    offset_pointcloud(m, n_points_u, n_points_v)</span>
-<span class="sd">        Generates an offset point cloud for the surface, moving each point by a scalar multiple of the normal vector.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_Q</span><span class="p">):</span>
@@ -680,26 +666,6 @@
 <span class="sd">    theta_of_t : function</span>
 <span class="sd">        Function describing the tilt angle theta as a function of the parametric coordinates u(t) and v(t).</span>
 
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    tangent(t)</span>
-<span class="sd">        Computes the normalized tangent vector of the toolpath at a given time t.</span>
-<span class="sd">    binormal(t)</span>
-<span class="sd">        Computes the normalized binormal vector of the toolpath at a given time t.</span>
-<span class="sd">    curvature_ratio(X, direction)</span>
-<span class="sd">        Computes the curvature ratio of the surface at point X in the given direction.</span>
-<span class="sd">    set_theta_function()</span>
-<span class="sd">        Sets or adjusts the theta function based on the milling context; defaults to Meusnier&#39;s angle if not specified.</span>
-<span class="sd">    value_at(s, t, method=&#39;point&#39;)</span>
-<span class="sd">        Evaluates the envelope&#39;s position at given parametric values s and t using specified methods.</span>
-<span class="sd">    value_at_for_diff(X)</span>
-<span class="sd">        Utility function to facilitate differential calculations at parametric values X.</span>
-<span class="sd">    point_projection(punto, initial_parameter, delta=1e-1, tolerance=1e-4)</span>
-<span class="sd">        Projects a point onto the toolpath, adjusting for the initial guess of parametric coordinates.</span>
-<span class="sd">    shank_at_t(t, distance=1+np.sqrt(5))</span>
-<span class="sd">        Computes the shank position and its end position based on the toolpath&#39;s geometry at time t.</span>
-<span class="sd">    cilindro_at_t(t, distance=1+np.sqrt(5))</span>
-<span class="sd">        Constructs a cylindrical representation of the toolpath for visualization and analysis.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">u_of_t</span><span class="p">,</span> <span class="n">v_of_t</span><span class="p">,</span> <span class="n">mat_phi</span><span class="p">,</span> <span class="n">mat_theta</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
@@ -1123,30 +1089,6 @@
 <span class="sd">        and maximum bounds for the parameters. Typically set to [[0, 1], [0, 1]], covering the full standard</span>
 <span class="sd">        parametric range of the Bézier surface.</span>
 
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    func_for_grad(X)</span>
-<span class="sd">        Evaluates the Bézier function, primarily used for gradient calculations within optimization routines.</span>
-<span class="sd">    border_u0_root_at_level(z)</span>
-<span class="sd">        Finds intersections of the surface with the plane at z along the u=0 border of the domain.</span>
-<span class="sd">    border_u1_root_at_level(z)</span>
-<span class="sd">        Finds intersections of the surface with the plane at z along the u=1 border of the domain.</span>
-<span class="sd">    border_v0_root_at_level(z)</span>
-<span class="sd">        Finds intersections of the surface with the plane at z along the v=0 border of the domain.</span>
-<span class="sd">    border_v1_root_at_level(z)</span>
-<span class="sd">        Finds intersections of the surface with the plane at z along the v=1 border of the domain.</span>
-<span class="sd">    all_border_roots(z)</span>
-<span class="sd">        Aggregates all roots found on the borders for a given z value and filters out those not lying within the domain.</span>
-<span class="sd">    get_next_initial_condition_and_w(r0, delta, w_last=False)</span>
-<span class="sd">        Computes the next point and direction for contour tracing starting from a given point using a specified step size.</span>
-<span class="sd">    is_approximation_in_range(x1)</span>
-<span class="sd">        Checks if a given point is within the valid parametric domain of the surface.</span>
-<span class="sd">    get_next_root(z, x1, w)</span>
-<span class="sd">        Finds the next point on a contour at a given z level starting from an initial point and moving in a specified direction.</span>
-<span class="sd">    level_sets(z, delta=0.01)</span>
-<span class="sd">        Traces the complete level curve for a specified z level within the unit square.</span>
-<span class="sd">    level_sets_multiple_z(list_of_z, delta=0.01)</span>
-<span class="sd">        Traces level curves for multiple z values and aggregates the results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat</span><span class="p">):</span>

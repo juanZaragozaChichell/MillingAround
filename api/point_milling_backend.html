@@ -263,23 +263,6 @@ the output will be an array with a dot product result for each point.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="point_milling_backend.BezierPatch.Bezier">
 <span class="sig-name descname"><span class="pre">Bezier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#BezierPatch.Bezier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.BezierPatch.Bezier" title="Link to this definition">¶</a></dt>
-<dd><p>Evaluates the Bézier surface at the specified parameter values.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>ndarray</em>)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.BezierPatch.DuDvfun">
-<span class="sig-name descname"><span class="pre">DuDvfun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#BezierPatch.DuDvfun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.BezierPatch.DuDvfun" title="Link to this definition">¶</a></dt>
-<dd><p>Computes the partial derivatives of the Bézier surface at the specified parameter values.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">Bezier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#BezierPatch.Bezier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
 <dd><p>Evaluates the Bézier bicubic surface for the given parameters u and v.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -298,8 +281,8 @@ computed using the bicubic formula and the control net.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">DuDvfun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#BezierPatch.DuDvfun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.BezierPatch.DuDvfun">
+<span class="sig-name descname"><span class="pre">DuDvfun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#BezierPatch.DuDvfun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.BezierPatch.DuDvfun" title="Link to this definition">¶</a></dt>
 <dd><p>Computes the derivatives of the Bézier surface with respect to u and v at the given parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -400,24 +383,6 @@ and also computes the normal vector at a given point on the surface.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="point_milling_backend.Surface.normal_vector">
 <span class="sig-name descname"><span class="pre">normal_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Surface.normal_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Surface.normal_vector" title="Link to this definition">¶</a></dt>
-<dd><p>Computes and returns the normal vector at the point X on the surface.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.Surface.point_cloud">
-<span class="sig-name descname"><span class="pre">point_cloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_points_u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points_v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Surface.point_cloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Surface.point_cloud" title="Link to this definition">¶</a></dt>
-<dd><p>Generates a point cloud for the surface using a mesh grid of points defined over the domain.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.Surface.offset_pointcloud">
-<span class="sig-name descname"><span class="pre">offset_pointcloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points_u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points_v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Surface.offset_pointcloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Surface.offset_pointcloud" title="Link to this definition">¶</a></dt>
-<dd><p>Generates an offset point cloud for the surface, moving each point by a scalar multiple of the normal vector.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">normal_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Surface.normal_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
 <dd><p>Computes and returns the normal vector at the specified point on the surface.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -436,8 +401,8 @@ and also computes the normal vector at a given point on the surface.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id3">
-<span class="sig-name descname"><span class="pre">point_cloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_points_u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points_v</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Surface.point_cloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.Surface.point_cloud">
+<span class="sig-name descname"><span class="pre">point_cloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_points_u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points_v</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Surface.point_cloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Surface.point_cloud" title="Link to this definition">¶</a></dt>
 <dd><p>Generates a point cloud representing the surface.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -457,8 +422,8 @@ object for plotting, as well as vertex normal vectors.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">offset_pointcloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points_u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points_v</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Surface.offset_pointcloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.Surface.offset_pointcloud">
+<span class="sig-name descname"><span class="pre">offset_pointcloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points_u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points_v</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Surface.offset_pointcloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Surface.offset_pointcloud" title="Link to this definition">¶</a></dt>
 <dd><p>Generates an offset point cloud, where each point on the original surface is moved
 along the normal vector by a distance ‘m’ downwards.</p>
 <dl class="field-list simple">
@@ -577,60 +542,6 @@ of a toolpath envelope in machining processes with flat-end cutting or toroidal 
 <dl class="py method">
 <dt class="sig sig-object py" id="point_milling_backend.Envelope.tangent">
 <span class="sig-name descname"><span class="pre">tangent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.tangent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Envelope.tangent" title="Link to this definition">¶</a></dt>
-<dd><p>Computes the normalized tangent vector of the toolpath at a given time t.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.Envelope.binormal">
-<span class="sig-name descname"><span class="pre">binormal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.binormal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Envelope.binormal" title="Link to this definition">¶</a></dt>
-<dd><p>Computes the normalized binormal vector of the toolpath at a given time t.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.Envelope.curvature_ratio">
-<span class="sig-name descname"><span class="pre">curvature_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.curvature_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Envelope.curvature_ratio" title="Link to this definition">¶</a></dt>
-<dd><p>Computes the curvature ratio of the surface at point X in the given direction.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.Envelope.set_theta_function">
-<span class="sig-name descname"><span class="pre">set_theta_function</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.set_theta_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Envelope.set_theta_function" title="Link to this definition">¶</a></dt>
-<dd><p>Sets or adjusts the theta function based on the milling context; defaults to Meusnier’s angle if not specified.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.Envelope.value_at">
-<span class="sig-name descname"><span class="pre">value_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'point'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.value_at"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Envelope.value_at" title="Link to this definition">¶</a></dt>
-<dd><p>Evaluates the envelope’s position at given parametric values s and t using specified methods.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.Envelope.value_at_for_diff">
-<span class="sig-name descname"><span class="pre">value_at_for_diff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.value_at_for_diff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Envelope.value_at_for_diff" title="Link to this definition">¶</a></dt>
-<dd><p>Utility function to facilitate differential calculations at parametric values X.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.Envelope.point_projection">
-<span class="sig-name descname"><span class="pre">point_projection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">punto</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_parameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.point_projection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Envelope.point_projection" title="Link to this definition">¶</a></dt>
-<dd><p>Projects a point onto the toolpath, adjusting for the initial guess of parametric coordinates.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.Envelope.shank_at_t">
-<span class="sig-name descname"><span class="pre">shank_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">np.sqrt(5)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.shank_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Envelope.shank_at_t" title="Link to this definition">¶</a></dt>
-<dd><p>Computes the shank position and its end position based on the toolpath’s geometry at time t.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.Envelope.cilindro_at_t">
-<span class="sig-name descname"><span class="pre">cilindro_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">np.sqrt(5)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#point_milling_backend.Envelope.cilindro_at_t" title="Link to this definition">¶</a></dt>
-<dd><p>Constructs a cylindrical representation of the toolpath for visualization and analysis.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="id5">
-<span class="sig-name descname"><span class="pre">tangent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.tangent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Link to this definition">¶</a></dt>
 <dd><p>Computes and returns the normalized tangent vector at a specific or multiple time points along the toolpath.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -646,8 +557,8 @@ of a toolpath envelope in machining processes with flat-end cutting or toroidal 
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">binormal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.binormal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.Envelope.binormal">
+<span class="sig-name descname"><span class="pre">binormal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.binormal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Envelope.binormal" title="Link to this definition">¶</a></dt>
 <dd><p>Computes and returns the normalized binormal vector at a specific or multiple time points along the toolpath.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -663,8 +574,8 @@ of a toolpath envelope in machining processes with flat-end cutting or toroidal 
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id7">
-<span class="sig-name descname"><span class="pre">curvature_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.curvature_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id7" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.Envelope.curvature_ratio">
+<span class="sig-name descname"><span class="pre">curvature_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.curvature_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Envelope.curvature_ratio" title="Link to this definition">¶</a></dt>
 <dd><p>Curvature ratio of surface at point U and direction given.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -683,8 +594,8 @@ of a toolpath envelope in machining processes with flat-end cutting or toroidal 
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id8">
-<span class="sig-name descname"><span class="pre">set_theta_function</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.set_theta_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.Envelope.set_theta_function">
+<span class="sig-name descname"><span class="pre">set_theta_function</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.set_theta_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Envelope.set_theta_function" title="Link to this definition">¶</a></dt>
 <dd><p>Defines or adjusts the theta function for the envelope, using the Meusnier’s angle calculation if no
 specific theta function is provided.</p>
 <dl class="field-list simple">
@@ -698,8 +609,8 @@ specific theta function is provided.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id9">
-<span class="sig-name descname"><span class="pre">value_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'point'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.value_at"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id9" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.Envelope.value_at">
+<span class="sig-name descname"><span class="pre">value_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'point'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.value_at"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Envelope.value_at" title="Link to this definition">¶</a></dt>
 <dd><p>Computes the value of the envelope at given parametric values s and t using the specified computational method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -719,8 +630,8 @@ specific theta function is provided.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id10">
-<span class="sig-name descname"><span class="pre">value_at_for_diff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.value_at_for_diff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id10" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.Envelope.value_at_for_diff">
+<span class="sig-name descname"><span class="pre">value_at_for_diff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.value_at_for_diff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Envelope.value_at_for_diff" title="Link to this definition">¶</a></dt>
 <dd><p>Facilitates differential operations by computing the envelope value at parametric coordinates provided in an array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -736,8 +647,8 @@ specific theta function is provided.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id11">
-<span class="sig-name descname"><span class="pre">point_projection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">punto</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_parameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerancia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.point_projection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id11" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.Envelope.point_projection">
+<span class="sig-name descname"><span class="pre">point_projection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">punto</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_parameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerancia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.point_projection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Envelope.point_projection" title="Link to this definition">¶</a></dt>
 <dd><p>Projects a point onto the toolpath using iterative adjustment to minimize the distance to the toolpath.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -758,8 +669,8 @@ specific theta function is provided.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id12">
-<span class="sig-name descname"><span class="pre">shank_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.23606797749979</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.shank_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id12" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.Envelope.shank_at_t">
+<span class="sig-name descname"><span class="pre">shank_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.23606797749979</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#Envelope.shank_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.Envelope.shank_at_t" title="Link to this definition">¶</a></dt>
 <dd><p>Computes the position of the milling shank at a given time t, based on the toolpath and specified distance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -857,72 +768,6 @@ parametric range of the Bézier surface.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="point_milling_backend.G_function.func_for_grad">
 <span class="sig-name descname"><span class="pre">func_for_grad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.func_for_grad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.func_for_grad" title="Link to this definition">¶</a></dt>
-<dd><p>Evaluates the Bézier function, primarily used for gradient calculations within optimization routines.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.G_function.border_u0_root_at_level">
-<span class="sig-name descname"><span class="pre">border_u0_root_at_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.border_u0_root_at_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.border_u0_root_at_level" title="Link to this definition">¶</a></dt>
-<dd><p>Finds intersections of the surface with the plane at z along the u=0 border of the domain.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.G_function.border_u1_root_at_level">
-<span class="sig-name descname"><span class="pre">border_u1_root_at_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.border_u1_root_at_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.border_u1_root_at_level" title="Link to this definition">¶</a></dt>
-<dd><p>Finds intersections of the surface with the plane at z along the u=1 border of the domain.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.G_function.border_v0_root_at_level">
-<span class="sig-name descname"><span class="pre">border_v0_root_at_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.border_v0_root_at_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.border_v0_root_at_level" title="Link to this definition">¶</a></dt>
-<dd><p>Finds intersections of the surface with the plane at z along the v=0 border of the domain.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.G_function.border_v1_root_at_level">
-<span class="sig-name descname"><span class="pre">border_v1_root_at_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.border_v1_root_at_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.border_v1_root_at_level" title="Link to this definition">¶</a></dt>
-<dd><p>Finds intersections of the surface with the plane at z along the v=1 border of the domain.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.G_function.all_border_roots">
-<span class="sig-name descname"><span class="pre">all_border_roots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.all_border_roots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.all_border_roots" title="Link to this definition">¶</a></dt>
-<dd><p>Aggregates all roots found on the borders for a given z value and filters out those not lying within the domain.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.G_function.get_next_initial_condition_and_w">
-<span class="sig-name descname"><span class="pre">get_next_initial_condition_and_w</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_last</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.get_next_initial_condition_and_w"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.get_next_initial_condition_and_w" title="Link to this definition">¶</a></dt>
-<dd><p>Computes the next point and direction for contour tracing starting from a given point using a specified step size.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.G_function.is_approximation_in_range">
-<span class="sig-name descname"><span class="pre">is_approximation_in_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.is_approximation_in_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.is_approximation_in_range" title="Link to this definition">¶</a></dt>
-<dd><p>Checks if a given point is within the valid parametric domain of the surface.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.G_function.get_next_root">
-<span class="sig-name descname"><span class="pre">get_next_root</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.get_next_root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.get_next_root" title="Link to this definition">¶</a></dt>
-<dd><p>Finds the next point on a contour at a given z level starting from an initial point and moving in a specified direction.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.G_function.level_sets">
-<span class="sig-name descname"><span class="pre">level_sets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.level_sets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.level_sets" title="Link to this definition">¶</a></dt>
-<dd><p>Traces the complete level curve for a specified z level within the unit square.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="point_milling_backend.G_function.level_sets_multiple_z">
-<span class="sig-name descname"><span class="pre">level_sets_multiple_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.level_sets_multiple_z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.level_sets_multiple_z" title="Link to this definition">¶</a></dt>
-<dd><p>Traces level curves for multiple z values and aggregates the results.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="id13">
-<span class="sig-name descname"><span class="pre">func_for_grad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.func_for_grad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id13" title="Link to this definition">¶</a></dt>
 <dd><p>Wrapper function for the Bézier surface to be used in gradient computations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -938,8 +783,8 @@ parametric range of the Bézier surface.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id14">
-<span class="sig-name descname"><span class="pre">border_u0_root_at_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.border_u0_root_at_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id14" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.G_function.border_u0_root_at_level">
+<span class="sig-name descname"><span class="pre">border_u0_root_at_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.border_u0_root_at_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.border_u0_root_at_level" title="Link to this definition">¶</a></dt>
 <dd><p>Finds the roots (intersections) of the Bézier surface at the specified level z along the border where u=0.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -955,26 +800,26 @@ parametric range of the Bézier surface.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id15">
-<span class="sig-name descname"><span class="pre">border_u1_root_at_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.border_u1_root_at_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id15" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.G_function.border_u1_root_at_level">
+<span class="sig-name descname"><span class="pre">border_u1_root_at_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.border_u1_root_at_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.border_u1_root_at_level" title="Link to this definition">¶</a></dt>
 <dd><p>gets intersections for u=1 at level z</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id16">
-<span class="sig-name descname"><span class="pre">border_v0_root_at_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.border_v0_root_at_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id16" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.G_function.border_v0_root_at_level">
+<span class="sig-name descname"><span class="pre">border_v0_root_at_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.border_v0_root_at_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.border_v0_root_at_level" title="Link to this definition">¶</a></dt>
 <dd><p>gets intersections for v=0 at level z</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id17">
-<span class="sig-name descname"><span class="pre">border_v1_root_at_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.border_v1_root_at_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id17" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.G_function.border_v1_root_at_level">
+<span class="sig-name descname"><span class="pre">border_v1_root_at_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.border_v1_root_at_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.border_v1_root_at_level" title="Link to this definition">¶</a></dt>
 <dd><p>gets intersections for v=1 at level z</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id18">
-<span class="sig-name descname"><span class="pre">all_border_roots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.all_border_roots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id18" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.G_function.all_border_roots">
+<span class="sig-name descname"><span class="pre">all_border_roots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.all_border_roots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.all_border_roots" title="Link to this definition">¶</a></dt>
 <dd><p>Aggregates all roots found along all borders at the specified z level and filters out those not within the domain.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -990,8 +835,8 @@ parametric range of the Bézier surface.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id19">
-<span class="sig-name descname"><span class="pre">get_next_initial_condition_and_w</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_last</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.get_next_initial_condition_and_w"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id19" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.G_function.get_next_initial_condition_and_w">
+<span class="sig-name descname"><span class="pre">get_next_initial_condition_and_w</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_last</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.get_next_initial_condition_and_w"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.get_next_initial_condition_and_w" title="Link to this definition">¶</a></dt>
 <dd><p>Calculates the next position and direction for tracing the level curve, starting from the initial point r0.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1011,8 +856,8 @@ parametric range of the Bézier surface.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id20">
-<span class="sig-name descname"><span class="pre">is_approximation_in_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.is_approximation_in_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id20" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.G_function.is_approximation_in_range">
+<span class="sig-name descname"><span class="pre">is_approximation_in_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.is_approximation_in_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.is_approximation_in_range" title="Link to this definition">¶</a></dt>
 <dd><p>Checks whether a given point is within the defined parametric domain of the function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1028,8 +873,8 @@ parametric range of the Bézier surface.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id21">
-<span class="sig-name descname"><span class="pre">get_next_root</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.get_next_root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id21" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.G_function.get_next_root">
+<span class="sig-name descname"><span class="pre">get_next_root</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.get_next_root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.get_next_root" title="Link to this definition">¶</a></dt>
 <dd><p>Computes the next root on the level set specified by z, using a line search strategy along vector w.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1049,8 +894,8 @@ parametric range of the Bézier surface.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id22">
-<span class="sig-name descname"><span class="pre">level_sets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.level_sets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id22" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.G_function.level_sets">
+<span class="sig-name descname"><span class="pre">level_sets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.level_sets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.level_sets" title="Link to this definition">¶</a></dt>
 <dd><p>Traces complete level curves for a specified z-level within the domain.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1069,8 +914,8 @@ parametric range of the Bézier surface.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id23">
-<span class="sig-name descname"><span class="pre">level_sets_multiple_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.level_sets_multiple_z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id23" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="point_milling_backend.G_function.level_sets_multiple_z">
+<span class="sig-name descname"><span class="pre">level_sets_multiple_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/point_milling_backend.html#G_function.level_sets_multiple_z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#point_milling_backend.G_function.level_sets_multiple_z" title="Link to this definition">¶</a></dt>
 <dd><p>Computes level sets for multiple values of z and aggregates them into a single array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

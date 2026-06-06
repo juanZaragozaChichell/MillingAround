@@ -166,47 +166,18 @@ in <a class="reference internal" href="#CylinderCollisionDetection.MultipleCylin
 <dl class="py method">
 <dt class="sig sig-object py" id="CylinderCollisionDetection.CollisionInformation.colliding_ids">
 <span class="sig-name descname"><span class="pre">colliding_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CylinderCollisionDetection.html#CollisionInformation.colliding_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CylinderCollisionDetection.CollisionInformation.colliding_ids" title="Link to this definition">¶</a></dt>
-<dd><p>Return the IDs of cylinders currently classified as colliding.</p>
+<dd><p>Return indices of cylinders classified as colliding.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="CylinderCollisionDetection.CollisionInformation.non_colliding_ids">
 <span class="sig-name descname"><span class="pre">non_colliding_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CylinderCollisionDetection.html#CollisionInformation.non_colliding_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CylinderCollisionDetection.CollisionInformation.non_colliding_ids" title="Link to this definition">¶</a></dt>
-<dd><p>Return the IDs of cylinders cleared of collision.</p>
+<dd><p>Return indices of cylinders classified as free of collision.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="CylinderCollisionDetection.CollisionInformation.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compressed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CylinderCollisionDetection.html#CollisionInformation.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CylinderCollisionDetection.CollisionInformation.save" title="Link to this definition">¶</a></dt>
-<dd><p>Persist the wrapped matrix to disk for later inspection.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>compressed</strong> (<em>bool</em>)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="CylinderCollisionDetection.CollisionInformation.load">
-<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CylinderCollisionDetection.html#CollisionInformation.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CylinderCollisionDetection.CollisionInformation.load" title="Link to this definition">¶</a></dt>
-<dd><p>Restore a <a class="reference internal" href="#CylinderCollisionDetection.CollisionInformation" title="CylinderCollisionDetection.CollisionInformation"><code class="xref py py-class docutils literal notranslate"><span class="pre">CollisionInformation</span></code></a> instance from a <code class="docutils literal notranslate"><span class="pre">.npz</span></code> artifact.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">colliding_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CylinderCollisionDetection.html#CollisionInformation.colliding_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
-<dd><p>Return indices of cylinders classified as colliding.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">non_colliding_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CylinderCollisionDetection.html#CollisionInformation.non_colliding_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
-<dd><p>Return indices of cylinders classified as free of collision.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compressed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CylinderCollisionDetection.html#CollisionInformation.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
 <dd><p>Save the underlying information matrix to a NumPy <code class="docutils literal notranslate"><span class="pre">.npz</span></code> archive.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -222,8 +193,8 @@ to use <code class="xref py py-func docutils literal notranslate"><span class="p
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id3">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CylinderCollisionDetection.html#CollisionInformation.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="CylinderCollisionDetection.CollisionInformation.load">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CylinderCollisionDetection.html#CollisionInformation.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CylinderCollisionDetection.CollisionInformation.load" title="Link to this definition">¶</a></dt>
 <dd><p>Load a <a class="reference internal" href="#CylinderCollisionDetection.CollisionInformation" title="CylinderCollisionDetection.CollisionInformation"><code class="xref py py-class docutils literal notranslate"><span class="pre">CollisionInformation</span></code></a> instance from a <code class="docutils literal notranslate"><span class="pre">.npz</span></code> file.</p>
 <p>This mirrors the <code class="docutils literal notranslate"><span class="pre">load</span></code> classmethod used for shank collision
 information and simply reconstructs the wrapper around the stored
@@ -331,13 +302,10 @@ exactly on the plane.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>The implementation is vectorized to efficiently handle multiple</p></li>
-</ul>
-<p>points and multiple planes at once.
-- This is useful in computational geometry tasks such as rendering,
-collision detection, and any application where relative position to
-a plane must be quantified.</p>
+<p>The implementation is vectorized to efficiently handle multiple points and
+multiple planes at once. This is useful in computational geometry tasks
+such as rendering, collision detection, and any application where relative
+position to a plane must be quantified.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -345,33 +313,71 @@ a plane must be quantified.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CylinderCollisionDetection.</span></span><span class="sig-name descname"><span class="pre">MultipleCylinders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">set_of_cylinders</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scene</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CylinderCollisionDetection.html#MultipleCylinders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CylinderCollisionDetection.MultipleCylinders" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Manages collision detection among multiple cylinders against a given mesh.</p>
-<section id="parameters">
-<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
-<dl class="simple">
-<dt>set_of_cylinders<span class="classifier">np.ndarray</span></dt><dd><p>An array of cylinders where each cylinder is represented by two points representing their medial axis (start and end), shape (N, 2, 3).</p>
-</dd>
-<dt>mesh<span class="classifier">open3d.geometry.TriangleMesh</span></dt><dd><p>The mesh object which may interact with the cylinders.</p>
-</dd>
-<dt>scene<span class="classifier">open3d.t.geometry.RaycastingScene</span></dt><dd><p>A scene object from Open3D that supports efficient raycasting operations.</p>
-</dd>
-<dt>R<span class="classifier">float</span></dt><dd><p>The radius of the cylinders, used in collision computations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>set_of_cylinders</strong> (<em>np.ndarray</em>) – An array of cylinders where each cylinder is represented by two points representing their medial axis (start and end), shape (N, 2, 3).</p></li>
+<li><p><strong>mesh</strong> (<em>open3d.geometry.TriangleMesh</em>) – The mesh object which may interact with the cylinders.</p></li>
+<li><p><strong>scene</strong> (<em>open3d.t.geometry.RaycastingScene</em>) – A scene object from Open3D that supports efficient raycasting operations.</p></li>
+<li><p><strong>R</strong> (<em>float</em>) – The radius of the cylinders, used in collision computations.</p></li>
+</ul>
 </dd>
 </dl>
-</section>
-<section id="attributes">
-<h2>Attributes:<a class="headerlink" href="#attributes" title="Link to this heading">¶</a></h2>
-<dl class="simple">
-<dt>bottoms<span class="classifier">np.ndarray</span></dt><dd><p>Starting points of each cylinder.</p>
-</dd>
-<dt>tops<span class="classifier">np.ndarray</span></dt><dd><p>Ending points of each cylinder.</p>
-</dd>
-<dt>axis_vector<span class="classifier">np.ndarray</span></dt><dd><p>The direction vector from the top to the bottom of each cylinder.</p>
-</dd>
-<dt>L<span class="classifier">float</span></dt><dd><p>Length of the axis vector (assumed uniform across all cylinders).</p>
-</dd>
-<dt>unitary_vectors<span class="classifier">np.ndarray</span></dt><dd><p>Normalized axis vectors for each cylinder.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CylinderCollisionDetection.MultipleCylinders.bottoms">
+<span class="sig-name descname"><span class="pre">bottoms</span></span><a class="headerlink" href="#CylinderCollisionDetection.MultipleCylinders.bottoms" title="Link to this definition">¶</a></dt>
+<dd><p>Starting points of each cylinder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CylinderCollisionDetection.MultipleCylinders.tops">
+<span class="sig-name descname"><span class="pre">tops</span></span><a class="headerlink" href="#CylinderCollisionDetection.MultipleCylinders.tops" title="Link to this definition">¶</a></dt>
+<dd><p>Ending points of each cylinder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CylinderCollisionDetection.MultipleCylinders.axis_vector">
+<span class="sig-name descname"><span class="pre">axis_vector</span></span><a class="headerlink" href="#CylinderCollisionDetection.MultipleCylinders.axis_vector" title="Link to this definition">¶</a></dt>
+<dd><p>The direction vector from the top to the bottom of each cylinder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CylinderCollisionDetection.MultipleCylinders.L">
+<span class="sig-name descname"><span class="pre">L</span></span><a class="headerlink" href="#CylinderCollisionDetection.MultipleCylinders.L" title="Link to this definition">¶</a></dt>
+<dd><p>Length of the axis vector (assumed uniform across all cylinders).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CylinderCollisionDetection.MultipleCylinders.unitary_vectors">
+<span class="sig-name descname"><span class="pre">unitary_vectors</span></span><a class="headerlink" href="#CylinderCollisionDetection.MultipleCylinders.unitary_vectors" title="Link to this definition">¶</a></dt>
+<dd><p>Normalized axis vectors for each cylinder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="CylinderCollisionDetection.MultipleCylinders.distance_to_axis">
 <span class="sig-name descname"><span class="pre">distance_to_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">working_indices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CylinderCollisionDetection.html#MultipleCylinders.distance_to_axis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CylinderCollisionDetection.MultipleCylinders.distance_to_axis" title="Link to this definition">¶</a></dt>
@@ -412,41 +418,30 @@ component.</p>
 <span class="sig-name descname"><span class="pre">compute_safe_spheres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">working_indices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/CylinderCollisionDetection.html#MultipleCylinders.compute_safe_spheres"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CylinderCollisionDetection.MultipleCylinders.compute_safe_spheres" title="Link to this definition">¶</a></dt>
 <dd><p>Computes safety spheres around given points to determine potential collision states with a mesh.</p>
 <p>Collision detection is based on the definition given in our SPM2024 paper and the Propositions 1&amp;amp;2</p>
-<section id="id4">
-<h3>Parameters:<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
-<dl class="simple">
-<dt>list_of_points<span class="classifier">list or np.ndarray</span></dt><dd><p>Points to evaluate for potential collisions, expected to be an array-like structure of 3D points.</p>
-</dd>
-<dt>working_indices<span class="classifier">list or np.ndarray</span></dt><dd><p>Indices of cylinders corresponding to each point in <cite>list_of_points</cite>. This maps each point to a specific
-cylinder for assessing its relationship with the mesh in the context of that cylinder’s position and orientation.</p>
-</dd>
-</dl>
-</section>
-<section id="returns">
-<h3>Returns:<a class="headerlink" href="#returns" title="Link to this heading">¶</a></h3>
-<dl class="simple">
-<dt>collision_index<span class="classifier">np.ndarray</span></dt><dd><p>An array indicating the collision status for each point:
-- -2: Undetermined (initial state).
-- 1: Non-colliding (safe).
-- 0: Colliding.
-- -1: Footpoint below the tool cutter (considered safe).</p>
-</dd>
-<dt>list_of_points<span class="classifier">np.ndarray</span></dt><dd><p>The original list of points passed to the function, formatted as a NumPy array.</p>
-</dd>
-<dt>footpoints<span class="classifier">np.ndarray</span></dt><dd><p>The nearest points on the mesh to each point in <cite>list_of_points</cite>.</p>
-</dd>
-<dt>safe_distances<span class="classifier">np.ndarray</span></dt><dd><p>Calculated safe distances from each point to its corresponding footpoint, adjusted for the cylinder’s radius.</p>
-</dd>
-</dl>
-</section>
-<section id="notes">
-<h3>Notes:<a class="headerlink" href="#notes" title="Link to this heading">¶</a></h3>
-<ul class="simple">
-<li><p>The method uses the scene’s raycasting capabilities to find the nearest mesh points (footpoints) for the given points.</p></li>
-<li><p>It calculates whether these points are on the boundary of the mesh, above or below the tool’s cutting plane,</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>list_of_points</strong> (<em>list</em><em> or </em><em>np.ndarray</em>) – Points to evaluate for potential collisions, expected to be an array-like structure of 3D points.</p></li>
+<li><p><strong>working_indices</strong> (<em>list</em><em> or </em><em>np.ndarray</em>) – Indices of cylinders corresponding to each point in <cite>list_of_points</cite>. This maps each point to a specific
+cylinder for assessing its relationship with the mesh in the context of that cylinder’s position and orientation.</p></li>
 </ul>
-<p>and their perpendicular distance to the cylinder axis to assess collision risks.</p>
-</section>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>collision_index</strong> (<em>np.ndarray</em>) – An array indicating the collision status for each point. Codes are
+<code class="docutils literal notranslate"><span class="pre">-2</span></code> for undetermined, <code class="docutils literal notranslate"><span class="pre">1</span></code> for non-colliding, <code class="docutils literal notranslate"><span class="pre">0</span></code> for
+colliding, and <code class="docutils literal notranslate"><span class="pre">-1</span></code> for footpoint below the tool cutter.</p></li>
+<li><p><strong>list_of_points</strong> (<em>np.ndarray</em>) – The original list of points passed to the function, formatted as a NumPy array.</p></li>
+<li><p><strong>footpoints</strong> (<em>np.ndarray</em>) – The nearest points on the mesh to each point in <cite>list_of_points</cite>.</p></li>
+<li><p><strong>safe_distances</strong> (<em>np.ndarray</em>) – Calculated safe distances from each point to its corresponding footpoint, adjusted for the cylinder’s radius.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The method uses the scene’s raycasting capabilities to find the nearest
+mesh points, then checks boundary status, tool-plane side, and distance
+to the cylinder axis to assess collision risks.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -500,54 +495,19 @@ from <code class="docutils literal notranslate"><span class="pre">information_ma
 collision state until all cylinders are evaluated or a colliding cylinder is found.</p>
 <p>This method initiates with the assumption that the collision state of each cylinder is unknown (‘?’).
 Collision detection is based on the our definitions and propositions. The method updates cylinder states iteratively.</p>
-<section id="id5">
-<h3>Returns:<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
-<dl>
-<dt>tuple</dt><dd><p>A tuple containing:
-- int: The number of iterations it took to resolve the collision states of all cylinders.
-- np.ndarray: The updated information matrix detailing the current state of each cylinder, including whether</p>
-<blockquote>
-<div><p>it is colliding, non-colliding, or undetermined.</p>
-</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of iterations and a structured wrapper around the updated
+information matrix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[int, <a class="reference internal" href="#CylinderCollisionDetection.CollisionInformation" title="CylinderCollisionDetection.CollisionInformation">CollisionInformation</a>]</p>
 </dd>
 </dl>
-</section>
-<section id="information-matrix-structure">
-<h3>Information Matrix Structure:<a class="headerlink" href="#information-matrix-structure" title="Link to this heading">¶</a></h3>
-<dl class="simple">
-<dt>The information matrix contains several columns that store different types of data for each cylinder:</dt><dd><ol class="arabic simple" start="0">
-<li><p>Collision State (‘?’, True, False) - Initial unknown state ‘?’, True for colliding, False for non-colliding.</p></li>
-<li><p>cylinder Index - Numeric index of the cylinder in the set.</p></li>
-<li><p>cylinder Bottom - 3D coordinates of the bottom point of the cylinder.</p></li>
-<li><p>cylinder Top - 3D coordinates of the top point of the cylinder.</p></li>
-<li><p>List of Points - Dynamic list of points checked for collision along the cylinder.</p></li>
-<li><p>List of Footpoints - Corresponding closest points on the mesh for each point checked.</p></li>
-<li><p>List of Safe Distances - Computed safe distances for each point to determine if it is within a safe buffer.</p></li>
-<li><p>Collision Indices - Dynamic list of collision results for each point checked.</p></li>
-<li><p>List of Iterations - Records the iteration number when each point was checked.</p></li>
-</ol>
-</dd>
-</dl>
-</section>
-<section id="process">
-<h3>Process:<a class="headerlink" href="#process" title="Link to this heading">¶</a></h3>
-<ol class="arabic simple">
-<li><p>Initializes the information matrix with default values for all cylinders.</p></li>
-<li><p>Iteratively computes the safe distances and checks for collisions using <cite>compute_safe_spheres</cite>.</p></li>
-<li><p>Updates the information matrix with new data after each iteration, adjusting points based on their last known safe positions.</p></li>
-<li><p>Continues until all cylinders are confirmed as non colliding or a collision is found.</p></li>
-</ol>
-</section>
-<section id="id6">
-<h3>Notes:<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
-<ul class="simple">
-<li><p>The method dynamically adjusts the points of evaluation along the cylinder based on previously</p></li>
-</ul>
-<p>calculated safe distances.
-- It terminates when all cylinders are confirmed as non colliding or a collision is found.
-- In the final result, only case where a cylinder’s colliding state can be ‘?’ is if there’s a collision
-in another cylinder and it has been detected.</p>
-</section>
+<p class="rubric">Notes</p>
+<p>The method dynamically adjusts evaluation points along the cylinder
+using previously calculated safe distances. It terminates when all
+cylinders are confirmed as non-colliding or a collision is found.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -558,56 +518,21 @@ collision state until all cylinders are evaluated.</p>
 <p>This method initiates with the assumption that the collision state of each cylinder is unknown (‘?’).
 Collision detection is based on the our definitions and propositions. The method updates cylinder states
 iteratively.</p>
-<section id="id7">
-<h3>Returns:<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
-<dl>
-<dt>tuple</dt><dd><p>A tuple containing:
-- int: The number of iterations it took to resolve the collision states of all cylinders.
-- np.ndarray: The updated information matrix detailing the current state of each cylinder, including whether</p>
-<blockquote>
-<div><p>it is colliding, non-colliding, or undetermined.</p>
-</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of iterations and a structured wrapper around the updated
+information matrix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[int, <a class="reference internal" href="#CylinderCollisionDetection.CollisionInformation" title="CylinderCollisionDetection.CollisionInformation">CollisionInformation</a>]</p>
 </dd>
 </dl>
-</section>
-<section id="id8">
-<h3>Information Matrix Structure:<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
-<dl class="simple">
-<dt>The information matrix contains several columns that store different types of data for each cylinder:</dt><dd><ol class="arabic simple" start="0">
-<li><p>Collision State (‘?’, True, False) - Initial unknown state ‘?’, True for colliding, False for non-colliding.</p></li>
-<li><p>cylinder Index - Numeric index of the cylinder in the set.</p></li>
-<li><p>cylinder Bottom - 3D coordinates of the bottom point of the cylinder.</p></li>
-<li><p>cylinder Top - 3D coordinates of the top point of the cylinder.</p></li>
-<li><p>List of Points - Dynamic list of points checked for collision along the cylinder.</p></li>
-<li><p>List of Footpoints - Corresponding closest points on the mesh for each point checked.</p></li>
-<li><p>List of Safe Distances - Computed safe distances for each point to determine if it is within a safe buffer.</p></li>
-<li><p>Collision Indices - Dynamic list of collision results for each point checked.</p></li>
-<li><p>List of Iterations - Records the iteration number when each point was checked.</p></li>
-</ol>
-</dd>
-</dl>
-</section>
-<section id="id9">
-<h3>Process:<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
-<ol class="arabic simple">
-<li><p>Initializes the information matrix with default values for all cylinders.</p></li>
-<li><p>Iteratively computes the safe distances and checks for collisions using <cite>compute_safe_spheres</cite>.</p></li>
-<li><p>Updates the information matrix with new data after each iteration, adjusting points based on their last known safe positions.</p></li>
-<li><p>Continues until all cylinders are labeled as (non)colliding.</p></li>
-</ol>
-</section>
-<section id="id10">
-<h3>Notes:<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
-<ul class="simple">
-<li><p>The method dynamically adjusts the points of evaluation along the cylinder based on previously</p></li>
-</ul>
-<p>calculated safe distances.
-- It terminates when all cylinders are labeled as (non)colliding.
-- In the final result, all cylinders should be ‘True’ or ‘False’.</p>
-</section>
+<p class="rubric">Notes</p>
+<p>The method dynamically adjusts evaluation points along the cylinder
+using previously calculated safe distances. It terminates when all
+cylinders are labeled as colliding or non-colliding.</p>
 </dd></dl>
 
-</section>
 </dd></dl>
 
 </section>

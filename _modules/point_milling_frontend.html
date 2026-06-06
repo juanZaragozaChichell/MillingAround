@@ -83,9 +83,8 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    c : 2D NumPy array of shape (4,4)</span>
-<span class="sd">        The 16 fitted scalar coefficients c_{i,j}.</span>
-<span class="sd">        So the fitted surface is:</span>
-<span class="sd">            z = sum_{i=0..3} sum_{j=0..3} c[i,j]*B_i(u)*B_j(v).</span>
+<span class="sd">        The 16 fitted scalar coefficients ``c[i, j]`` defining</span>
+<span class="sd">        ``z = sum_{i=0..3} sum_{j=0..3} c[i,j] * B_i(u) * B_j(v)``.</span>
 
 <span class="sd">    P : np.ndarray of shape (4, 4, 3)</span>
 <span class="sd">        Control net points ``(i/3, j/3, c[i, j])`` composing the bicubic patch.</span>
@@ -387,11 +386,6 @@
 <span class="sd">        Offset distance (second torus radius) applied when generating the offset surface.</span>
 <span class="sd">    mat_Q : np.ndarray</span>
 <span class="sd">        ``4x4`` matrix describing the quadric surface that ``pmb.Surface`` evaluates.</span>
-<span class="sd">    matrices : np.ndarray</span>
-<span class="sd">        Stack of three ``4x4`` matrices used respectively for the G-function, ``phi`` rotation, and ``theta`` tilt.</span>
-<span class="sd">    number_of_paths : int</span>
-<span class="sd">        Requested number of level sets sampled from the G-function. Multiple components can increase</span>
-<span class="sd">        the actual number of contact curves.</span>
 <span class="sd">    h : float</span>
 <span class="sd">        Safety margin applied when computing minimum/maximum values of ``G`` to avoid degenerate level sets.</span>
 <span class="sd">    surfaces_resolution : int</span>
@@ -403,20 +397,6 @@
 <span class="sd">    n_shanks : int</span>
 <span class="sd">        Default number of shank samples evaluated along each envelope.</span>
 
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    triangulate(...)</span>
-<span class="sd">        Return vertices, connectivity, and normals for the surface or its offset.</span>
-<span class="sd">    G_level_sets()</span>
-<span class="sd">        Sample consistently oriented level sets from the current ``G_function``.</span>
-<span class="sd">    uv_curves_parametrized()</span>
-<span class="sd">        Convert the level-set curves into cubic spline parametrizations for ``u`` and ``v``.</span>
-<span class="sd">    concatenated_envelopes_fun(...)</span>
-<span class="sd">        Discretize every envelope and merge them into a single mesh, with several trimming options.</span>
-<span class="sd">    discrete_shanks_vectorized(...)</span>
-<span class="sd">        Evaluate shank positions across all envelopes in a vectorized fashion.</span>
-<span class="sd">    error_measure_per_vertex()</span>
-<span class="sd">        Raycast surface normals against the envelopes to obtain per-vertex machining error.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">mat_Q</span><span class="p">,</span> <span class="n">matrices</span><span class="p">,</span>
@@ -749,14 +729,14 @@
 
 <span class="sd">        This routine samples ``n_shanks`` for each envelope, calls :meth:`pmb.Envelope.shank_at_t` in a vectorized fashion, and reshapes the result so every row contains the  two endpoints of a shank segment in 3D.</span>
 
-<span class="sd">        Parameters:</span>
+<span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        n_shanks : int, optional</span>
 <span class="sd">            The number of discrete shank positions to calculate along the envelopes, default is 25.</span>
 <span class="sd">        distance : float, optional</span>
 <span class="sd">            The length of the shank, default is 1 + sqrt(5).</span>
 
-<span class="sd">        Returns:</span>
+<span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
 <span class="sd">            Array of shape ``(len(self.envelopes) * n_shanks, 2, 3)`` where the second dimension stores</span>
